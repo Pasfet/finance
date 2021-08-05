@@ -2,7 +2,7 @@
   <ul class="pagination">
     <li class="pagination-item">
       <button type="button" @click="onClickFirstPage" :disabled="isInFirstPage">
-        First
+        &#171;
       </button>
     </li>
     <li class="pagination-item">
@@ -11,7 +11,7 @@
         @click="onClickPreviousPage"
         :disabled="isInFirstPage"
       >
-        Prev
+        &#8249;
       </button>
     </li>
 
@@ -28,12 +28,12 @@
 
     <li class="pagination-item">
       <button type="button" @click="onClickNextPage" :disabled="isInLastPage">
-        Next
+        &#8250;
       </button>
     </li>
     <li class="pagination-item">
       <button type="button" @click="onClickLastPage" :disabled="isInLastPage">
-        Last
+        &#187;
       </button>
     </li>
   </ul>
@@ -107,6 +107,12 @@ export default {
       this.$emit('pagechanged', this.currentPage - 1);
     },
     onClickPage(page) {
+      if (page > this.totalPages) {
+        this.$emit('pagechanged', this.totalPages);
+      }
+      if (page <= 0) {
+        this.$emit('pagechanged', 1);
+      }
       this.$emit('pagechanged', page);
     },
     onClickNextPage() {

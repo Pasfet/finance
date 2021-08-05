@@ -25,27 +25,38 @@
 
 <script>
 import PaymentsDisplay from './components/PaymentsDisplay.vue';
-import addPayment from './components/addPayment.vue';
-import Pagination from './components/Pagination.vue';
+import AddPayment from './components/AddPayment';
+import Pagination from './components/Pagination';
 export default {
   name: 'App',
   components: {
     PaymentsDisplay,
-    addPayment,
+    AddPayment,
     Pagination,
   },
   data() {
     return {
       paymentsList: [],
-      currentPage: 1,
+      page: 1,
     };
+  },
+  computed: {
+    currentPage() {
+      if (this.page <= 0) {
+        return 1;
+      } else if (this.page > this.paymentsList.length) {
+        return Math.ceil(this.paymentsList.length / 5);
+      } else {
+        return this.page;
+      }
+    },
   },
   methods: {
     addNewCost(cost) {
       this.paymentsList = [...this.paymentsList, cost];
     },
     onPageChange(page) {
-      this.currentPage = page;
+      this.page = page;
     },
   },
   created() {
