@@ -82,6 +82,9 @@ export default {
         Math.min(this.startPage + this.maxVisibleButtons - 1, this.totalPages);
         i++
       ) {
+        if (i === 0) {
+          continue;
+        }
         range.push({
           name: i,
           isDisabled: i === this.currentPage,
