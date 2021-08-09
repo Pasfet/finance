@@ -7,18 +7,8 @@
     </header>
     <main>
       <div class="container">
-        <add-payment @addNewCost="addNewCost" />
-        <payments-display
-          :payments="paymentsList"
-          :page="currentPages"
-          :perPage="perPage"
-        />
-        <pagination-comp
-          :totalLength="paymentsList.length"
-          :perPage="perPage"
-          :currentPage="currentPages"
-          @pagechanged="onPageChange"
-        />
+        <add-payment />
+        <payments-display :perPage="perPage" />
       </div>
     </main>
   </div>
@@ -26,53 +16,17 @@
 
 <script>
 import PaymentsDisplay from './components/PaymentsDisplay.vue';
-import AddPayment from './components/AddPayment';
-import PaginationComp from './components/PaginationComp.vue';
+import AddPayment from './components/addPayment';
 export default {
   name: 'App',
   components: {
     PaymentsDisplay,
     AddPayment,
-    PaginationComp,
   },
   data() {
     return {
-      paymentsList: [],
-      currentPage: 1,
       perPage: 5,
     };
-  },
-  computed: {
-    currentPages() {
-      if (this.currentPage <= 0) {
-        return 1;
-      } else if (
-        this.currentPage > Math.ceil(this.paymentsList.length / this.perPage)
-      ) {
-        return Math.ceil(this.paymentsList.length / this.perPage);
-      } else {
-        return this.currentPage;
-      }
-    },
-  },
-  methods: {
-    addNewCost(cost) {
-      this.paymentsList = [...this.paymentsList, cost];
-    },
-    onPageChange(page) {
-      this.currentPage = page;
-    },
-  },
-  created() {
-    const localStorageData = localStorage.getItem('finance');
-    if (localStorageData) {
-      this.paymentsList = JSON.parse(localStorageData);
-    }
-  },
-  watch: {
-    paymentsList() {
-      localStorage.setItem('finance', JSON.stringify(this.paymentsList));
-    },
   },
 };
 </script>

@@ -1,11 +1,11 @@
 <template>
   <ul class="pagination">
-    <li class="pagination-item">
+    <li class="pagination-item" v-if="arrowsInitMax">
       <button type="button" @click="onClickFirstPage" :disabled="isInFirstPage">
         &#171;
       </button>
     </li>
-    <li class="pagination-item">
+    <li class="pagination-item" v-if="arrows">
       <button
         type="button"
         @click="onClickPreviousPage"
@@ -26,12 +26,12 @@
       </button>
     </li>
 
-    <li class="pagination-item">
+    <li class="pagination-item" v-if="arrows">
       <button type="button" @click="onClickNextPage" :disabled="isInLastPage">
         &#8250;
       </button>
     </li>
-    <li class="pagination-item">
+    <li class="pagination-item" v-if="arrowsInitMax">
       <button type="button" @click="onClickLastPage" :disabled="isInLastPage">
         &#187;
       </button>
@@ -50,14 +50,27 @@ export default {
     totalLength: {
       type: Number,
       required: true,
+      default: 0,
     },
     perPage: {
       type: Number,
-      required: true,
+      required: false,
+      default: 5,
     },
     currentPage: {
       type: Number,
-      required: true,
+      required: false,
+      default: 1,
+    },
+    arrows: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
+    arrowsInitMax: {
+      type: Boolean,
+      required: false,
+      default: true,
     },
   },
   computed: {

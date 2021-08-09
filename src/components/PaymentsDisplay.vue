@@ -1,6 +1,6 @@
 <template>
   <div class="payments-table__wrap">
-    <div v-if="!payments.length">
+    <div v-if="!paymentsList.length">
       Пусто :(
     </div>
     <table class="payments-table" v-else>
@@ -14,10 +14,10 @@
       </thead>
       <tbody>
         <tr
-          v-for="(item, idx) of payments.slice(startIndex, endIndex)"
+          v-for="(item, idx) of paymentsList.slice(startIndex, endIndex)"
           :key="idx"
         >
-          <td>{{ payments.indexOf(item) + 1 }}</td>
+          <td>{{ paymentsList.indexOf(item) + 1 }}</td>
           <td>{{ item.date }}</td>
           <td>{{ item.category }}</td>
           <td>{{ item.value }}</td>
@@ -29,34 +29,57 @@
         </tr>
       </tfoot>
     </table>
+    <pagination-comp
+      :currentPage="currentPage"
+      :totalLength="paymentsList.length"
+      :maxVisibleButtons="3"
+      :perPage="perPage"
+      :arrowsInitMax="true"
+      @pagechanged="onPageChange"
+    />
   </div>
 </template>
 
 <script>
+import PaginationComp from './PaginationComp.vue';
 export default {
   name: 'PaymentsDisplay',
+  components: {
+    PaginationComp,
+  },
   props: {
-    payments: {
-      type: Array,
-    },
-    page: {
-      type: Number,
-    },
     perPage: {
       type: Number,
-      required: true,
+      required: false,
+      default: 10,
     },
   },
+  data() {
+    return {
+      currentPage: 1,
+    };
+  },
   computed: {
+    paymentsList() {
+      return this.$store.getters.getPaymentsList;
+    },
     getFullSum() {
-      return this.payments.reduce((sum, cur) => sum + +cur.value, 0);
+      return this.$store.getters.getFullPaymentValue;
     },
     startIndex() {
-      return (this.page - 1) * this.perPage;
+      return (this.currentPage - 1) * this.perPage;
     },
     endIndex() {
-      return this.page * this.perPage;
+      return this.currentPage * this.perPage;
     },
+  },
+  methods: {
+    onPageChange(page) {
+      this.currentPage = page;
+    },
+  },
+  created() {
+    this.$store.dispatch('fetchData');
   },
 };
 </script>

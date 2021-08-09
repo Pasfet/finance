@@ -86,7 +86,7 @@ export default {
         category: this.category || 'not specified',
         value: this.value || 0,
       };
-      this.$emit('addNewCost', cost);
+      this.$store.commit('addToPaymentList', cost);
       this.date = '';
       this.category = '';
       this.value = '';
