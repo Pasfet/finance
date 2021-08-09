@@ -42,16 +42,20 @@ export default {
     page: {
       type: Number,
     },
+    perPage: {
+      type: Number,
+      required: true,
+    },
   },
   computed: {
     getFullSum() {
       return this.payments.reduce((sum, cur) => sum + +cur.value, 0);
     },
     startIndex() {
-      return (this.page - 1) * 5;
+      return (this.page - 1) * this.perPage;
     },
     endIndex() {
-      return this.page * 5;
+      return this.page * this.perPage;
     },
   },
 };

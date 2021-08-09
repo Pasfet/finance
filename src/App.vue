@@ -7,17 +7,18 @@
     </header>
     <main>
       <div class="container">
-        <add-payment @addNewCost="addNewCost"></add-payment>
+        <add-payment @addNewCost="addNewCost" />
         <payments-display
           :payments="paymentsList"
-          :page="currentPage"
-        ></payments-display>
-        <pagination
-          :totalPages="Math.ceil(paymentsList.length / 5)"
-          :perPage="paymentsList.length"
-          :currentPage="currentPage"
+          :page="currentPages"
+          :perPage="perPage"
+        />
+        <pagination-comp
+          :totalLength="paymentsList.length"
+          :perPage="perPage"
+          :currentPage="currentPages"
           @pagechanged="onPageChange"
-        ></pagination>
+        />
       </div>
     </main>
   </div>
@@ -26,28 +27,31 @@
 <script>
 import PaymentsDisplay from './components/PaymentsDisplay.vue';
 import AddPayment from './components/AddPayment';
-import Pagination from './components/Pagination';
+import PaginationComp from './components/PaginationComp.vue';
 export default {
   name: 'App',
   components: {
     PaymentsDisplay,
     AddPayment,
-    Pagination,
+    PaginationComp,
   },
   data() {
     return {
       paymentsList: [],
-      page: 1,
+      currentPage: 1,
+      perPage: 5,
     };
   },
   computed: {
-    currentPage() {
-      if (this.page <= 0) {
+    currentPages() {
+      if (this.currentPage <= 0) {
         return 1;
-      } else if (this.page > this.paymentsList.length) {
-        return Math.ceil(this.paymentsList.length / 5);
+      } else if (
+        this.currentPage > Math.ceil(this.paymentsList.length / this.perPage)
+      ) {
+        return Math.ceil(this.paymentsList.length / this.perPage);
       } else {
-        return this.page;
+        return this.currentPage;
       }
     },
   },
@@ -56,7 +60,7 @@ export default {
       this.paymentsList = [...this.paymentsList, cost];
     },
     onPageChange(page) {
-      this.page = page;
+      this.currentPage = page;
     },
   },
   created() {

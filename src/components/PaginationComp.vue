@@ -47,7 +47,7 @@ export default {
       required: false,
       default: 3,
     },
-    totalPages: {
+    totalLength: {
       type: Number,
       required: true,
     },
@@ -61,6 +61,9 @@ export default {
     },
   },
   computed: {
+    totalPages() {
+      return Math.ceil(this.totalLength / this.perPage);
+    },
     startPage() {
       // When on the first page
       if (this.currentPage === 1) {
