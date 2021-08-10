@@ -9,7 +9,15 @@
       </template>
       <template v-slot:body>
         <div class="payments__input-wrap">
-          <label for="category" class="payments__input-label">
+          <label class="payments__checkbox-wrap">
+            <input type="checkbox" v-model="isCategory" />
+            Выбрать из существущей категории?
+          </label>
+          <label
+            for="category"
+            class="payments__input-label"
+            v-if="!isCategory"
+          >
             <input
               type="text"
               class="payments__input"
@@ -18,6 +26,21 @@
               v-model="category"
             />
           </label>
+          <select
+            class="payments__select"
+            name="category"
+            id="categories"
+            v-if="isCategory"
+            v-model="category"
+          >
+            <option
+              v-for="(category, idx) in getCategories"
+              :key="idx"
+              :value="category"
+            >
+              {{ category }}
+            </option>
+          </select>
           <label for="value" class="payments__input-label">
             <input
               type="text"
@@ -64,11 +87,15 @@ export default {
   data() {
     return {
       date: '',
+      isCategory: '',
       category: '',
       value: '',
     };
   },
   computed: {
+    getPaymentsLength() {
+      return this.$store.getters.getFullLength;
+    },
     getCurrentDate() {
       const validDate = isNaN(new Date(this.date))
         ? new Date()
@@ -78,10 +105,14 @@ export default {
       const year = validDate.getFullYear();
       return `${day}.${month}.${year}`;
     },
+    getCategories() {
+      return this.$store.getters.getCategories;
+    },
   },
   methods: {
     addCost() {
       const cost = {
+        id: this.getPaymentsLength + 1,
         date: this.getCurrentDate,
         category: this.category || 'not specified',
         value: this.value || 0,
@@ -122,6 +153,33 @@ export default {
     width: 100%;
     &::placeholder {
       font-family: Avenir, Helvetica, Arial, sans-serif;
+    }
+  }
+  &__checkbox {
+    &-wrap {
+      margin-bottom: 20px;
+    }
+  }
+  &__select {
+    display: block;
+    position: relative;
+    margin-bottom: 20px;
+    max-width: 450px;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #e2e2e2;
+    border-radius: 5px;
+    -moz-appearance: none; /* Firefox */
+    -webkit-appearance: none; /* Safari and Chrome */
+    appearance: none;
+    transition: border 0.3s ease-in-out, color 0.3s ease-in-out;
+    option {
+      font-size: 14px;
+    }
+    &:hover {
+      cursor: pointer;
+      border: 1px solid #535353;
+      color: #535353;
     }
   }
 }

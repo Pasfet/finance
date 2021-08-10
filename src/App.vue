@@ -8,7 +8,7 @@
     <main>
       <div class="container">
         <add-payment />
-        <payments-display :perPage="perPage" />
+        <payments-display />
       </div>
     </main>
   </div>
@@ -22,11 +22,6 @@ export default {
   components: {
     PaymentsDisplay,
     AddPayment,
-  },
-  data() {
-    return {
-      perPage: 5,
-    };
   },
 };
 </script>

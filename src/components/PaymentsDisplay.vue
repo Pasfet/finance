@@ -1,6 +1,6 @@
 <template>
   <div class="payments-table__wrap">
-    <div v-if="!paymentsList.length">
+    <div v-if="!paymentsList">
       Пусто :(
     </div>
     <table class="payments-table" v-else>
@@ -13,11 +13,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr
-          v-for="(item, idx) of paymentsList.slice(startIndex, endIndex)"
-          :key="idx"
-        >
-          <td>{{ paymentsList.indexOf(item) + 1 }}</td>
+        <tr v-for="item of paymentsList" :key="item.id">
+          <td>{{ item.id }}</td>
           <td>{{ item.date }}</td>
           <td>{{ item.category }}</td>
           <td>{{ item.value }}</td>
@@ -31,7 +28,7 @@
     </table>
     <pagination-comp
       :currentPage="currentPage"
-      :totalLength="paymentsList.length"
+      :totalLength="getLengthPaymentsList"
       :maxVisibleButtons="3"
       :perPage="perPage"
       :arrowsInitMax="true"
@@ -47,30 +44,26 @@ export default {
   components: {
     PaginationComp,
   },
-  props: {
-    perPage: {
-      type: Number,
-      required: false,
-      default: 10,
-    },
-  },
   data() {
     return {
       currentPage: 1,
+      perPage: 5,
     };
   },
   computed: {
     paymentsList() {
-      return this.$store.getters.getPaymentsList;
+      const reg = new RegExp(/[0-9]/, 'g');
+      const payments = this.$store.getters.getPaymentsList;
+      const keys = Object.keys(payments).filter(
+        key => +key.match(reg) === this.currentPage
+      );
+      return payments[keys];
     },
     getFullSum() {
       return this.$store.getters.getFullPaymentValue;
     },
-    startIndex() {
-      return (this.currentPage - 1) * this.perPage;
-    },
-    endIndex() {
-      return this.currentPage * this.perPage;
+    getLengthPaymentsList() {
+      return this.$store.getters.getFullLength;
     },
   },
   methods: {
