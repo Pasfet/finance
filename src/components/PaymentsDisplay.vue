@@ -1,48 +1,53 @@
 <template>
   <div class="payments-table__wrap">
-    <div v-if="!paymentsList">
-      Пусто :(
+    <div class="payments-table__left">
+      <div v-if="!paymentsList">
+        Пусто :(
+      </div>
+      <table class="payments-table" v-else>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Date</th>
+            <th>Category</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item of paymentsList" :key="item.id">
+            <td>{{ item.id }}</td>
+            <td>{{ item.date }}</td>
+            <td>{{ item.category }}</td>
+            <td>{{ item.value }}</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="4">Сумма расходов: {{ getFullSum }}</td>
+          </tr>
+        </tfoot>
+      </table>
+      <pagination-comp
+        :currentPage="currentPage"
+        :totalLength="getLengthPaymentsList"
+        :maxVisibleButtons="3"
+        :perPage="perPage"
+        :arrowsInitMax="true"
+        @pagechanged="onPageChange"
+      />
     </div>
-    <table class="payments-table" v-else>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Date</th>
-          <th>Category</th>
-          <th>Value</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="item of paymentsList" :key="item.id">
-          <td>{{ item.id }}</td>
-          <td>{{ item.date }}</td>
-          <td>{{ item.category }}</td>
-          <td>{{ item.value }}</td>
-        </tr>
-      </tbody>
-      <tfoot>
-        <tr>
-          <td colspan="4">Сумма расходов: {{ getFullSum }}</td>
-        </tr>
-      </tfoot>
-    </table>
-    <pagination-comp
-      :currentPage="currentPage"
-      :totalLength="getLengthPaymentsList"
-      :maxVisibleButtons="3"
-      :perPage="perPage"
-      :arrowsInitMax="true"
-      @pagechanged="onPageChange"
-    />
+    <pie-chart />
   </div>
 </template>
 
 <script>
 import PaginationComp from './PaginationComp.vue';
+import PieChart from './PieChart.vue';
 export default {
   name: 'PaymentsDisplay',
   components: {
     PaginationComp,
+    PieChart,
   },
   data() {
     return {
@@ -65,6 +70,9 @@ export default {
     getLengthPaymentsList() {
       return this.$store.getters.getFullLength;
     },
+    getCategories() {
+      return this.$store.getters.getCategories;
+    },
   },
   methods: {
     onPageChange(page) {
@@ -82,6 +90,7 @@ export default {
   &-table {
     &__wrap {
       margin-top: 50px;
+      display: flex;
     }
     table-layout: fixed;
     width: 50%;

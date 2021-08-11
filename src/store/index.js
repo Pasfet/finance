@@ -62,10 +62,11 @@ export default new Vuex.Store({
 
       if (resFetch) {
         commit('setPaymentsList', resFetch);
+        commit('setCategories', resFetch);
       }
       if (localStorageData) {
         commit('setPaymentsList', JSON.parse(localStorageData));
-        commit('setCategories', resFetch);
+        commit('setCategories', localStorageData);
       }
     },
   },

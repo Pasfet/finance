@@ -114,8 +114,10 @@ export default {
       const cost = {
         id: this.getPaymentsLength + 1,
         date: this.getCurrentDate,
-        category: this.category || 'not specified',
-        value: this.value || 0,
+        category:
+          `${this.category[0].toUpperCase()}${this.category.slice(1)}` ||
+          'Not specified',
+        value: +this.value || 0,
       };
       this.$store.commit('addToPaymentList', cost);
       this.date = '';
