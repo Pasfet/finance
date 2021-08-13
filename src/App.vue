@@ -1,28 +1,16 @@
 <template>
   <div id="app">
-    <header>
-      <div class="container">
-        <h1 class="header__title">My personal costs</h1>
-      </div>
-    </header>
     <main>
       <div class="container">
-        <add-payment />
-        <payments-display />
+        <router-view />
       </div>
     </main>
   </div>
 </template>
 
 <script>
-import PaymentsDisplay from './components/PaymentsDisplay.vue';
-import AddPayment from './components/addPayment';
 export default {
   name: 'App',
-  components: {
-    PaymentsDisplay,
-    AddPayment,
-  },
 };
 </script>
 
@@ -49,12 +37,7 @@ body {
   margin: 0 auto;
   padding: 15px;
 }
-.header__title {
-  margin-top: 150px;
-}
-.overflow-hidden {
-  overflow: hidden;
-}
+
 .btn {
   border: 1px solid #26a69a;
   background-color: #26a69a;

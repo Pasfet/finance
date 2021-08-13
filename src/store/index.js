@@ -13,9 +13,9 @@ export default new Vuex.Store({
       state.paymentsList = payload;
     },
     addToPaymentList(state, payload) {
-      const pages = Object.keys(state.paymentsList);
-      if (state.paymentsList[pages[pages.length - 1]].length < 5) {
-        state.paymentsList[pages[pages.length - 1]].push(payload);
+      const pages = Object.values(state.paymentsList);
+      if (pages[pages.length - 1].length < 5) {
+        pages[pages.length - 1].push(payload);
         localStorage.setItem('finance', JSON.stringify(state.paymentsList));
       } else {
         Vue.set(state.paymentsList, `page${pages.length + 1}`, [payload]);
@@ -51,6 +51,26 @@ export default new Vuex.Store({
       return length;
     },
     getCategories: state => state.categories,
+    getPieData: state => {
+      const values = Object.values(state.paymentsList);
+      const data = [];
+      const res = [];
+      values.forEach(arr =>
+        arr.forEach(cost => {
+          const { category, value } = cost;
+          data.push({ category, value });
+        })
+      );
+      for (let i = 0; i < data.length; i++) {
+        const find = res.find(el => el.category === data[i].category);
+        if (find) {
+          find.value += data[i].value;
+        } else {
+          res.push(data[i]);
+        }
+      }
+      return res;
+    },
   },
   actions: {
     async fetchData({ commit }) {
@@ -61,12 +81,13 @@ export default new Vuex.Store({
       const localStorageData = localStorage.getItem('finance');
 
       if (resFetch) {
+        // localStorage.setItem('finance', JSON.stringify(resFetch));
         commit('setPaymentsList', resFetch);
         commit('setCategories', resFetch);
       }
       if (localStorageData) {
         commit('setPaymentsList', JSON.parse(localStorageData));
-        commit('setCategories', localStorageData);
+        commit('setCategories', JSON.parse(localStorageData));
       }
     },
   },

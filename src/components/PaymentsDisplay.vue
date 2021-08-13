@@ -14,7 +14,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item of paymentsList" :key="item.id">
+          <tr v-for="item of paymentsListTable" :key="item.id">
             <td>{{ item.id }}</td>
             <td>{{ item.date }}</td>
             <td>{{ item.category }}</td>
@@ -36,7 +36,7 @@
         @pagechanged="onPageChange"
       />
     </div>
-    <pie-chart />
+    <pie-chart :chartDate="getPieData" />
   </div>
 </template>
 
@@ -53,17 +53,12 @@ export default {
     return {
       currentPage: 1,
       perPage: 5,
+      paymentsList: {
+        payments: {},
+      },
     };
   },
   computed: {
-    paymentsList() {
-      const reg = new RegExp(/[0-9]/, 'g');
-      const payments = this.$store.getters.getPaymentsList;
-      const keys = Object.keys(payments).filter(
-        key => +key.match(reg) === this.currentPage
-      );
-      return payments[keys];
-    },
     getFullSum() {
       return this.$store.getters.getFullPaymentValue;
     },
@@ -73,14 +68,31 @@ export default {
     getCategories() {
       return this.$store.getters.getCategories;
     },
+    getData() {
+      return this.$store.getters.getPaymentsList;
+    },
+    paymentsListTable() {
+      const reg = new RegExp(/[0-9]/, 'g');
+      const keys = Object.keys(this.paymentsList.payments).filter(
+        key => +key.match(reg) === this.currentPage
+      );
+      return this.paymentsList.payments[keys];
+    },
+    getPieData() {
+      return this.$store.getters.getPieData;
+    },
   },
   methods: {
     onPageChange(page) {
       this.currentPage = page;
     },
   },
-  created() {
-    this.$store.dispatch('fetchData');
+  async created() {
+    await this.$store.dispatch('fetchData');
+    this.$set(this.paymentsList, 'payments', this.getData);
+    if (this.$route?.params?.page) {
+      this.onPageChange(+this.$route.params.page);
+    }
   },
 };
 </script>

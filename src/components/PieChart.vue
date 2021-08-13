@@ -3,6 +3,11 @@ import { Pie } from 'vue-chartjs';
 
 export default {
   extends: Pie,
+  props: {
+    chartDate: {
+      required: true,
+    },
+  },
   data() {
     return {
       chartdata: {
@@ -30,42 +35,28 @@ export default {
     };
   },
   computed: {
-    getPieData() {
-      const res = [];
-      const values = this.$store.getters.getPaymentsList;
-      const data = Object.values(values);
-      for (let i = 0; i < data.length; i++) {
-        for (let j = 0; j < data[i].length; j++) {
-          const find = res.find(item => item.category === data[i][j].category);
-          if (find) {
-            find.value += data[i][j].value;
-          } else {
-            const newObj = {
-              category: data[i][j].category,
-              value: +data[i][j].value,
-            };
-            res.push(newObj);
-          }
-        }
-      }
-      return res.map(cost => cost.value);
-    },
     getCategories() {
-      return this.$store.getters.getCategories;
+      const categories = this.chartDate.map(data => data.category);
+      return categories;
+    },
+    getData() {
+      const values = this.chartDate.map(value => value.value);
+      return values;
     },
   },
   methods: {
     updatePie() {
       this.$set(this.chartdata, 'labels', this.getCategories);
-      this.$set(this.chartdata?.datasets[0], 'data', this.getPieData);
+      this.$set(this.chartdata.datasets[0], 'data', this.getData);
       this.renderChart(this.chartdata, this.options);
     },
   },
+
   mounted() {
     this.updatePie();
   },
   watch: {
-    getPieData() {
+    getData() {
       this.updatePie();
     },
     getCategories() {

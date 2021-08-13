@@ -1,9 +1,9 @@
 <template>
   <div>
-    <button class="btn payments-add" @click="$refs.modalName.openModal()">
+    <button class="btn payments-add" @click="$refs.addPaymentModal.openModal()">
       Add new cost &#43;
     </button>
-    <modal ref="modalName">
+    <modal ref="addPaymentModal">
       <template v-slot:header>
         <h1>New cost</h1>
       </template>
@@ -65,7 +65,7 @@
         <div>
           <button
             class="btn payments__btn payments__btn--cancel"
-            @click="$refs.modalName.closeModal()"
+            @click="$refs.addPaymentModal.closeModal()"
           >
             Cancel
           </button>
@@ -114,9 +114,9 @@ export default {
       const cost = {
         id: this.getPaymentsLength + 1,
         date: this.getCurrentDate,
-        category:
-          `${this.category[0].toUpperCase()}${this.category.slice(1)}` ||
-          'Not specified',
+        category: this.category
+          ? `${this.category[0].toUpperCase()}${this.category.slice(1)}`
+          : 'Not category',
         value: +this.value || 0,
       };
       this.$store.commit('addToPaymentList', cost);
@@ -124,6 +124,15 @@ export default {
       this.category = '';
       this.value = '';
     },
+  },
+  mounted() {
+    if (this.$route?.params?.category) {
+      this.$refs.addPaymentModal.openModal();
+      this.category = this.$route.params.category;
+      if (this.$route?.query?.value) {
+        this.value = +this.$route?.query?.value;
+      }
+    }
   },
 };
 </script>
