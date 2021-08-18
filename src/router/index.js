@@ -10,16 +10,23 @@ const router = new Router({
       path: '/',
       component: () => import('../pages/PageMain'),
       name: 'PageMain',
+      children: [
+        {
+          path: '/add/:category',
+          component: () => import('../pages/PageMain'),
+          name: 'AddPaymentFromUrl',
+        },
+        {
+          path: '/edit/:id/:category',
+          component: () => import('../pages/PageMain'),
+          name: 'EditPaymentFromUrl',
+        },
+      ],
     },
     {
       path: '/:page',
       component: () => import('../pages/PageMain'),
       name: 'PageFromUrl',
-    },
-    {
-      path: '/add/payment/:category/',
-      component: () => import('../pages/PageMain'),
-      name: 'AddPaymentFromUrl',
     },
     {
       path: '*',

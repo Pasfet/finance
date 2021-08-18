@@ -5,12 +5,47 @@
         <router-view />
       </div>
     </main>
+    <transition name="fade">
+      <modal-window-add-payment
+        v-if="modalShow"
+        :modalSettings="modalSettings"
+      />
+    </transition>
   </div>
 </template>
 
 <script>
 export default {
   name: 'App',
+  components: {
+    ModalWindowAddPayment: () =>
+      import('./components/ModalWindowAddPayment.vue'),
+  },
+  data() {
+    return {
+      modalShow: false,
+      modalSettings: {},
+      tooltipSettings: {},
+    };
+  },
+  methods: {
+    onShow(settings) {
+      this.modalSettings = settings;
+      this.modalShow = true;
+    },
+    onClose() {
+      this.modalShow = false;
+      this.modalSettings = {};
+    },
+  },
+  mounted() {
+    this.$modal.EventBus.$on('show', this.onShow);
+    this.$modal.EventBus.$on('close', this.onClose);
+  },
+  beforeDestroy() {
+    this.$modal.EventBus.$off('show', this.onShow);
+    this.$modal.EventBus.$off('close', this.onClose);
+  },
 };
 </script>
 
@@ -49,5 +84,13 @@ body {
     cursor: pointer;
     opacity: 0.8;
   }
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

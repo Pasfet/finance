@@ -1,11 +1,7 @@
 <template>
   <div>
     <div class="payments__input-wrap">
-      <label class="payments__checkbox-wrap">
-        <input type="checkbox" v-model="isCategory" />
-        Выбрать из существущей категории?
-      </label>
-      <label for="category" class="payments__input-label" v-if="!isCategory">
+      <label for="category" class="payments__input-label">
         <input
           type="text"
           class="payments__input"
@@ -14,21 +10,6 @@
           v-model="category"
         />
       </label>
-      <select
-        class="payments__select"
-        name="category"
-        id="categories"
-        v-if="isCategory"
-        v-model="category"
-      >
-        <option
-          v-for="(category, idx) in getCategories"
-          :key="idx"
-          :value="category"
-        >
-          {{ category }}
-        </option>
-      </select>
       <label for="value" class="payments__input-label">
         <input
           type="text"
@@ -52,28 +33,24 @@
       <button class="btn payments__btn payments__btn--cancel" @click="onClose">
         Cancel
       </button>
-      <button class="btn payments__btn" @click="addCost">
-        Add &#43;
+      <button class="btn payments__btn" @click="editPayment">
+        Edit &#43;
       </button>
     </div>
   </div>
 </template>
 <script>
 export default {
-  name: 'addPayment',
-  components: {},
+  name: 'editPayment',
   data() {
     return {
       date: '',
-      isCategory: '',
       category: '',
       value: '',
+      id: 0,
     };
   },
   computed: {
-    getPaymentsLength() {
-      return this.$store.getters.getFullLength;
-    },
     getCurrentDate() {
       const validDate = isNaN(new Date(this.date))
         ? new Date()
@@ -83,43 +60,32 @@ export default {
       const year = validDate.getFullYear();
       return `${day}.${month}.${year}`;
     },
-    getCategories() {
-      return this.$store.getters.getCategories;
-    },
-    getLastId() {
-      return this.$store.getters.getLastId;
-    },
   },
   methods: {
-    addCost() {
-      const cost = {
-        id: this.getLastId + 1,
-        date: this.getCurrentDate,
+    editPayment() {
+      const editCost = {
+        id: +this.id,
         category: this.category
           ? `${this.category[0].toUpperCase()}${this.category.slice(1)}`
-          : 'Not category',
-        value: +this.value || 0,
+          : this.$route.params.category,
+        value: +this.value,
+        date: this.getCurrentDate,
       };
-      this.$store.dispatch('addPayment', cost);
-      this.date = '';
-      this.category = '';
-      this.value = '';
+      this.$store.dispatch('editPayment', editCost);
     },
     onClose() {
       this.$modal.close();
     },
   },
   mounted() {
-    if (this.$route?.params?.category) {
+    if (this.$route?.params) {
+      this.id = +this.$route.params.id;
       this.category = this.$route.params.category;
-      if (this.$route?.query?.value) {
-        this.value = +this.$route?.query?.value;
-      }
+      this.value = this.$route.query.value;
     }
   },
 };
 </script>
-
 <style lang="scss" scoped>
 .payments {
   &__btn {
@@ -147,11 +113,6 @@ export default {
     width: 100%;
     &::placeholder {
       font-family: Avenir, Helvetica, Arial, sans-serif;
-    }
-  }
-  &__checkbox {
-    &-wrap {
-      margin-bottom: 20px;
     }
   }
   &__select {

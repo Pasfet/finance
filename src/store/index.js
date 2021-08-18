@@ -13,14 +13,20 @@ export default new Vuex.Store({
       state.paymentsList = payload;
     },
     addToPaymentList(state, payload) {
-      const pages = Object.values(state.paymentsList);
-      if (pages[pages.length - 1].length < 5) {
-        pages[pages.length - 1].push(payload);
-        localStorage.setItem('finance', JSON.stringify(state.paymentsList));
-      } else {
-        Vue.set(state.paymentsList, `page${pages.length + 1}`, [payload]);
-        localStorage.setItem('finance', JSON.stringify(state.paymentsList));
+      const values = Object.values(state.paymentsList);
+      if (values) {
+        for (let i = 0; i < values.length; i++) {
+          if (values[i].length < 5) {
+            values[i].push(payload);
+            break;
+          }
+          if (values[i].length === 5 && i === values.length - 1) {
+            Vue.set(state.paymentsList, `page${values.length + 1}`, [payload]);
+            break;
+          }
+        }
       }
+      localStorage.setItem('finance', JSON.stringify(state.paymentsList));
     },
     setCategories(state) {
       const categories = Object.values(state.paymentsList).map(arr =>
@@ -34,6 +40,34 @@ export default new Vuex.Store({
           state.categories.push(categories[i][j]);
         }
       }
+    },
+    editPaymentCost(state, payload) {
+      const values = Object.values(state.paymentsList);
+      for (let i = 0; i < values.length; i++) {
+        const find = values[i].find(el => el.id === payload.id);
+        if (find) {
+          find.value = payload.value;
+          find.category = payload.category;
+          find.date = payload.date;
+        }
+      }
+      localStorage.setItem('finance', JSON.stringify(state.paymentsList));
+    },
+    deletePaymentCost(state, payload) {
+      const pages = Object.keys(state.paymentsList);
+      for (let i = 0; i < pages.length; i++) {
+        const find = state.paymentsList[pages[i]].find(
+          el => el.id === payload.id
+        );
+
+        if (find) {
+          state.paymentsList[pages[i]].splice(
+            state.paymentsList[pages[i]].indexOf(find),
+            1
+          );
+        }
+      }
+      localStorage.setItem('finance', JSON.stringify(state.paymentsList));
     },
   },
   getters: {
@@ -49,6 +83,11 @@ export default new Vuex.Store({
       const arrs = Object.values(state.paymentsList).map(arr => arr.length);
       const length = arrs.reduce((acc, cur) => acc + cur, 0);
       return length;
+    },
+    getLastId: state => {
+      const values = Object.values(state.paymentsList);
+      const lastPayment = values[values.length - 1].length;
+      return values[values.length - 1][lastPayment - 1].id;
     },
     getCategories: state => state.categories,
     getPieData: state => {
@@ -81,7 +120,6 @@ export default new Vuex.Store({
       const localStorageData = localStorage.getItem('finance');
 
       if (resFetch) {
-        // localStorage.setItem('finance', JSON.stringify(resFetch));
         commit('setPaymentsList', resFetch);
         commit('setCategories', resFetch);
       }
@@ -89,6 +127,15 @@ export default new Vuex.Store({
         commit('setPaymentsList', JSON.parse(localStorageData));
         commit('setCategories', JSON.parse(localStorageData));
       }
+    },
+    editPayment({ commit }, editCost) {
+      commit('editPaymentCost', editCost);
+    },
+    deletePayment({ commit }, deleteCost) {
+      commit('deletePaymentCost', deleteCost);
+    },
+    addPayment({ commit }, addPayment) {
+      commit('addToPaymentList', addPayment);
     },
   },
 });

@@ -5,19 +5,40 @@
         <h1 class="header__title">My personal costs</h1>
       </div>
     </header>
-    <add-payment />
+    <button class="btn payments-add" @click="showPaymentForm">
+      Add new cost &#43;
+    </button>
     <payments-display />
   </div>
 </template>
 <script>
-import PaymentsDisplay from '../components/PaymentsDisplay.vue';
-import AddPayment from '../components/addPayment.vue';
-
 export default {
   name: 'PageMain',
   components: {
-    PaymentsDisplay,
-    AddPayment,
+    PaymentsDisplay: () => import('../components/PaymentsDisplay.vue'),
+  },
+  data() {
+    return {};
+  },
+  methods: {
+    showPaymentForm() {
+      this.$modal.show('addPayment', { header: 'Add Payment Form' });
+    },
+  },
+  mounted() {
+    if (this.$route?.params) {
+      if (this.$route.params?.id) {
+        this.$modal.show('editPayment', { header: 'Edit Payment Form' });
+      } else if (this.$route.params?.category) {
+        this.$modal.show('addPayment', { header: 'Add Payment Form' });
+      }
+    }
+    // if (this.$route?.params.id) {
+    //   this.$modal.show('eidtPayment', { header: 'Edit Payment Form' });
+    // }
+    // if (this.$route?.params?.category) {
+    //   this.$modal.show('addPayment', { header: 'Add Payment Form' });
+    // }
   },
 };
 </script>
