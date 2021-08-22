@@ -31,7 +31,11 @@ describe('display', () => {
         { category: 'test', value: 100 },
         { category: 'test1', value: 200 },
       ],
-      getData: () => jest.fn(),
+      getPaymentsList: () => {
+        return {
+          page1: [{ id: 1, date: '10.05.2021', category: 'test', value: 100 }],
+        };
+      },
     };
     actions = {
       fetchData: jest.fn(),
@@ -47,17 +51,14 @@ describe('display', () => {
     expect(wrapper.text()).toContain('#', 'Date', 'Category', 'Value');
   });
   it('set data ', () => {
-    wrapper.vm.paymentsList = {
-      payments: {
-        page1: [{ id: 1, date: '10.05.2021', category: 'test', value: 100 }],
-      },
-    };
-
     expect(wrapper.vm.paymentsList).toEqual({
       payments: {
         page1: [{ id: 1, date: '10.05.2021', category: 'test', value: 100 }],
       },
     });
+  });
+  it('render data from vuex', () => {
+    expect(wrapper.text()).toContain('1', '10.05.2021', 'test', '100');
   });
   it('getFullPayments', () => {
     expect(wrapper.text()).toContain('2000');
