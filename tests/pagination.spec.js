@@ -1,54 +1,83 @@
-import { mount } from '@vue/test-utils';
+import { shallowMount } from '@vue/test-utils';
 import Pagination from '../src/components/PaginationComp';
 
-describe('change page & change on first/last page', () => {
-  const wrapper = mount(Pagination, {
-    propsData: {
-      totalLength: 20,
-      perPage: 5,
-      currentPage: 2,
-    },
-  });
-  it('props total pages & start page & currentPage', () => {
-    expect(wrapper.props('totalLength')).toBe(20);
-    expect(wrapper.props('perPage')).toBe(5);
-    expect(wrapper.props('currentPage')).toBe(2);
-  });
-  it('change page', () => {
-    const arrowFirstPage = wrapper.find('button[name=onFirstPage]');
-    const arrowPrevPage = wrapper.find('button[name=onPrevPage]');
-    const arrowNextPage = wrapper.find('button[name=onNextPage]');
-    const arrowLastPage = wrapper.find('button[name=onLastPage]');
-    const changePage = wrapper.find('button[name=changePage]');
-    arrowFirstPage.trigger('click');
-    arrowPrevPage.trigger('click');
-    arrowNextPage.trigger('click');
-    arrowLastPage.trigger('click');
-    changePage.trigger('click');
-    wrapper.vm.$emit('pagechanged');
-    expect(wrapper.emitted().pagechanged).toBeTruthy();
-  });
-});
+describe('pagination components', () => {
+  let wrapper;
 
-describe('first/last pages', () => {
-  it('first page', () => {
-    const wrapper = mount(Pagination, {
+  const totalLength = 20,
+    perPage = 5,
+    currentPage = 2,
+    maxVisibleButtons = 5,
+    arrows = true,
+    arrowsInitMax = true,
+    totalPages = Math.ceil(totalLength / perPage);
+
+  const createComponent = () => {
+    wrapper = shallowMount(Pagination, {
       propsData: {
-        totalLength: 10,
-        perPage: 5,
-        currentPage: 1,
+        totalLength: totalLength,
+        perPage: perPage,
+        currentPage: currentPage,
+        arrows: arrows,
+        arrowsInitMax: arrowsInitMax,
+        maxVisibleButtons: maxVisibleButtons,
       },
     });
-    expect(wrapper.props('currentPage')).toBe(1);
+  };
+
+  const findButtonByText = text =>
+    wrapper.findAll('button').wrappers.find(w => w.text() === text);
+
+  afterEach(() => {
+    wrapper.destroy();
   });
-  it('last page', () => {
-    const wrapper = mount(Pagination, {
-      propsData: {
-        totalLength: 10,
-        perPage: 5,
-        currentPage: 2,
-      },
-    });
-    expect(wrapper.props('currentPage')).toBe(2);
+
+  it('render pagination', () => {
+    createComponent();
+    expect(wrapper.text()).toContain('1', '2', '3', '4');
+  });
+  it('render arrows-prev/next pages pagination', () => {
+    createComponent();
+    expect(wrapper.html()).toContain('‹', '›');
+  });
+  it('render arrows-first/last pages pagination', () => {
+    createComponent();
+    expect(wrapper.html()).toContain('«', '»');
+  });
+
+  it('click on button emitted events pagechange', async () => {
+    const clickNumberPage = '1';
+    createComponent();
+    await findButtonByText(clickNumberPage).trigger('click');
+    wrapper.vm.$emit('pagechange', clickNumberPage);
+    expect(wrapper.emitted().pagechange).toStrictEqual([[clickNumberPage]]);
+  });
+  it('click prev arrow', async () => {
+    const clickNumberPage = '‹';
+    createComponent();
+    await findButtonByText(clickNumberPage).trigger('click');
+    wrapper.vm.$emit('pagechange', currentPage - 1);
+    expect(wrapper.emitted().pagechange).toStrictEqual([[currentPage - 1]]);
+  });
+  it('click next arrow', async () => {
+    const clickNumberPage = '›';
+    createComponent();
+    await findButtonByText(clickNumberPage).trigger('click');
+    wrapper.vm.$emit('pagechange', currentPage + 1);
+    expect(wrapper.emitted().pagechange).toStrictEqual([[currentPage + 1]]);
+  });
+  it('click firstPage arrow', async () => {
+    const clickNumberPage = '«';
+    createComponent();
+    await findButtonByText(clickNumberPage).trigger('click');
+    wrapper.vm.$emit('pagechange', 1);
+    expect(wrapper.emitted().pagechange).toStrictEqual([[1]]);
+  });
+  it('click lastPage arrow', async () => {
+    const clickNumberPage = '»';
+    createComponent();
+    await findButtonByText(clickNumberPage).trigger('click');
+    wrapper.vm.$emit('pagechange', totalPages);
+    expect(wrapper.emitted().pagechange).toStrictEqual([[totalPages]]);
   });
 });

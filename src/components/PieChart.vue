@@ -53,11 +53,11 @@ export default {
     this.updatePie();
   },
   watch: {
-    getData() {
-      this.updatePie();
-    },
-    getCategories() {
-      this.updatePie();
+    chartDate: {
+      immediate: true,
+      handler() {
+        this.updatePie();
+      },
     },
   },
 };

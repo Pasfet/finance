@@ -1,14 +1,28 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils';
-import Vuex from 'vuex';
 import Display from '../src/components/PaymentsDisplay';
+import contextMenu from '../src/plugins/ContextMenu/contextMenu';
+import pagination from '../src/components/PaginationComp';
+import Vuex from 'vuex';
 
 const localVue = createLocalVue();
 localVue.use(Vuex);
 
-describe('display table', () => {
+describe('display', () => {
+  let wrapper;
   let getters;
-  let store;
   let actions;
+  let store;
+
+  const createComponent = () => {
+    wrapper = shallowMount(Display, {
+      store,
+      localVue,
+      stubs: {
+        'context-menu': contextMenu,
+        'pagination-comp': pagination,
+      },
+    });
+  };
 
   beforeEach(() => {
     getters = {
@@ -17,6 +31,7 @@ describe('display table', () => {
         { category: 'test', value: 100 },
         { category: 'test1', value: 200 },
       ],
+      getData: () => jest.fn(),
     };
     actions = {
       fetchData: jest.fn(),
@@ -27,20 +42,24 @@ describe('display table', () => {
     });
   });
 
-  it('get full sum value & keys paymentsList', () => {
-    const wrapper = shallowMount(Display, { store, localVue });
+  it('render table', () => {
+    createComponent();
+    expect(wrapper.text()).toContain('#', 'Date', 'Category', 'Value');
+  });
+  it('set data ', () => {
     wrapper.vm.paymentsList = {
       payments: {
         page1: [{ id: 1, date: '10.05.2021', category: 'test', value: 100 }],
       },
     };
+
     expect(wrapper.vm.paymentsList).toEqual({
       payments: {
         page1: [{ id: 1, date: '10.05.2021', category: 'test', value: 100 }],
       },
     });
-    expect(typeof wrapper.vm.$options.computed.getFullSum).toBe('function');
-    const td = wrapper.find('td[name=tdFull]');
-    expect(td.text()).toBe(`Сумма расходов: ${getters.getFullPaymentValue()}`);
+  });
+  it('getFullPayments', () => {
+    expect(wrapper.text()).toContain('2000');
   });
 });
