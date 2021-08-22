@@ -59,7 +59,7 @@
         </tbody>
         <tfoot>
           <tr>
-            <td colspan="4" name="tdFull">Сумма расходов: {{ getFullSum }}</td>
+            <td colspan="4">Сумма расходов: {{ getFullSum }}</td>
           </tr>
         </tfoot>
       </table>
