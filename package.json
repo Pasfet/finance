@@ -5,7 +5,27 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "test": "jest"
+  },
+  "jest": {
+    "setupFiles": [
+      "jest-canvas-mock"
+    ],
+    "moduleFileExtensions": [
+      "js",
+      "vue"
+    ],
+    "transform": {
+      ".*\\.(vue)$": "<rootDir>/node_modules/vue-jest",
+      "^.+\\.js$": "<rootDir>/node_modules/babel-jest"
+    },
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "**/*.{js,vue}",
+      "!**/node_modules/**",
+      "!coverage/**"
+    ]
   },
   "dependencies": {
     "chart.js": "^2.9.4",
@@ -17,14 +37,21 @@
     "vuex": "^3.6.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.14.3",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
+    "@vue/test-utils": "1.2.0",
+    "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.1.0",
+    "babel-jest": "26.6.3",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
+    "jest": "26.6.3",
+    "jest-canvas-mock": "^2.3.1",
     "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
+    "vue-jest": "^3.0.7",
     "vue-template-compiler": "^2.6.11"
   }
 }

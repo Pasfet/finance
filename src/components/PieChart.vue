@@ -29,9 +29,6 @@ export default {
           },
         ],
       },
-      options: {
-        responsive: true,
-      },
     };
   },
   computed: {
@@ -48,7 +45,7 @@ export default {
     updatePie() {
       this.$set(this.chartdata, 'labels', this.getCategories);
       this.$set(this.chartdata.datasets[0], 'data', this.getData);
-      this.renderChart(this.chartdata, this.options);
+      this.renderChart(this.chartdata);
     },
   },
 

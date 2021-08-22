@@ -12,11 +12,11 @@
           id="category"
           placeholder="Payment category"
           v-model="category"
+          name="category"
         />
       </label>
       <select
         class="payments__select"
-        name="category"
         id="categories"
         v-if="isCategory"
         v-model="category"
@@ -36,6 +36,7 @@
           id="value"
           placeholder="Payment value"
           v-model="value"
+          name="value"
         />
       </label>
       <label for="date" class="payments__input-label">
@@ -49,10 +50,14 @@
       </label>
     </div>
     <div>
-      <button class="btn payments__btn payments__btn--cancel" @click="onClose">
+      <button
+        class="btn payments__btn payments__btn--cancel"
+        @click="onClose"
+        name="cancel"
+      >
         Cancel
       </button>
-      <button class="btn payments__btn" @click="addCost">
+      <button class="btn payments__btn" @click="addCost" name="add">
         Add &#43;
       </button>
     </div>
@@ -61,7 +66,6 @@
 <script>
 export default {
   name: 'addPayment',
-  components: {},
   data() {
     return {
       date: '',
@@ -71,9 +75,6 @@ export default {
     };
   },
   computed: {
-    getPaymentsLength() {
-      return this.$store.getters.getFullLength;
-    },
     getCurrentDate() {
       const validDate = isNaN(new Date(this.date))
         ? new Date()

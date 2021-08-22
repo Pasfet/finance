@@ -59,7 +59,7 @@
         </tbody>
         <tfoot>
           <tr>
-            <td colspan="4">Сумма расходов: {{ getFullSum }}</td>
+            <td colspan="4" name="tdFull">Сумма расходов: {{ getFullSum }}</td>
           </tr>
         </tfoot>
       </table>
@@ -121,9 +121,6 @@ export default {
     getLengthPaymentsList() {
       return this.$store.getters.getFullLength;
     },
-    getCategories() {
-      return this.$store.getters.getCategories;
-    },
     getData() {
       return this.$store.getters.getPaymentsList;
     },
@@ -156,7 +153,6 @@ export default {
         });
       } else if (event.action === 'delete') {
         this.$store.dispatch('deletePayment', event.item);
-        console.log(this.getLengthPaymentsList);
       }
     },
   },

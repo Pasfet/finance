@@ -1,7 +1,12 @@
 <template>
   <ul class="pagination">
     <li class="pagination-item" v-if="arrowsInitMax">
-      <button type="button" @click="onClickFirstPage" :disabled="isInFirstPage">
+      <button
+        type="button"
+        @click="onClickFirstPage"
+        :disabled="isInFirstPage"
+        name="onFirstPage"
+      >
         &#171;
       </button>
     </li>
@@ -10,6 +15,7 @@
         type="button"
         @click="onClickPreviousPage"
         :disabled="isInFirstPage"
+        name="onPrevPage"
       >
         &#8249;
       </button>
@@ -21,18 +27,29 @@
         @click="onClickPage(page.name)"
         :disabled="page.isDisabled"
         :class="{ active: isPageActive(page.name) }"
+        name="changePage"
       >
         {{ page.name }}
       </button>
     </li>
 
     <li class="pagination-item" v-if="arrows">
-      <button type="button" @click="onClickNextPage" :disabled="isInLastPage">
+      <button
+        type="button"
+        @click="onClickNextPage"
+        :disabled="isInLastPage"
+        name="onNextPage"
+      >
         &#8250;
       </button>
     </li>
     <li class="pagination-item" v-if="arrowsInitMax">
-      <button type="button" @click="onClickLastPage" :disabled="isInLastPage">
+      <button
+        type="button"
+        @click="onClickLastPage"
+        :disabled="isInLastPage"
+        name="onLastPage"
+      >
         &#187;
       </button>
     </li>
