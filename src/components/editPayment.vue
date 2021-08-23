@@ -8,6 +8,7 @@
           id="category"
           placeholder="Payment category"
           v-model="category"
+          data-testid="inputCategory"
         />
       </label>
       <label for="value" class="payments__input-label">
@@ -17,6 +18,7 @@
           id="value"
           placeholder="Payment value"
           v-model="value"
+          data-testid="inputValue"
         />
       </label>
       <label for="date" class="payments__input-label">
@@ -26,6 +28,7 @@
           id="date"
           placeholder="Payment date"
           v-model="date"
+          data-testid="date"
         />
       </label>
     </div>
@@ -74,7 +77,7 @@ export default {
       this.$store.dispatch('editPayment', editCost);
     },
     onClose() {
-      this.$modal.close();
+      this.$emit('close');
     },
   },
   mounted() {

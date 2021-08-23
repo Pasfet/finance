@@ -1,84 +1,84 @@
 <template>
-  <div class="payments-table__wrap">
-    <div class="payments-table__left">
-      <div v-if="!paymentsList">
-        Пусто :(
+  <div>
+    <div class="payments-table__wrap">
+      <div class="payments-table__left">
+        <table class="payments-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Date</th>
+              <th>Category</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="item of paymentsListTable" :key="item.id">
+              <td>{{ item.id }}</td>
+              <td>{{ item.date }}</td>
+              <td>{{ item.category }}</td>
+              <td>{{ item.value }}</td>
+              <td>
+                <button
+                  class="icon"
+                  @click.prevent.stop="openContext($event, item)"
+                  data-testid="context"
+                >
+                  <span>
+                    <svg
+                      version="1.1"
+                      id="Capa_1"
+                      xmlns="http://www.w3.org/2000/svg"
+                      xmlns:xlink="http://www.w3.org/1999/xlink"
+                      x="0px"
+                      y="0px"
+                      viewBox="0 0 384 384"
+                      style="enable-background:new 0 0 384 384;"
+                      xml:space="preserve"
+                    >
+                      <g>
+                        <g>
+                          <circle cx="192" cy="42.667" r="42.667" />
+                        </g>
+                      </g>
+                      <g>
+                        <g>
+                          <circle cx="192" cy="192" r="42.667" />
+                        </g>
+                      </g>
+                      <g>
+                        <g>
+                          <circle cx="192" cy="341.333" r="42.667" />
+                        </g>
+                      </g>
+                    </svg>
+                  </span>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="4">Сумма расходов: {{ getFullSum }}</td>
+            </tr>
+          </tfoot>
+        </table>
+        <pagination-comp
+          :currentPage="currentPage"
+          :totalLength="getLengthPaymentsList"
+          :maxVisibleButtons="3"
+          :perPage="perPage"
+          :arrowsInitMax="true"
+          @pagechanged="onPageChange"
+        />
       </div>
-      <table class="payments-table" v-else>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Date</th>
-            <th>Category</th>
-            <th>Value</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="item of paymentsListTable" :key="item.id">
-            <td>{{ item.id }}</td>
-            <td>{{ item.date }}</td>
-            <td>{{ item.category }}</td>
-            <td>{{ item.value }}</td>
-            <td>
-              <button
-                class="icon"
-                @click.prevent.stop="openContext($event, item)"
-              >
-                <span>
-                  <svg
-                    version="1.1"
-                    id="Capa_1"
-                    xmlns="http://www.w3.org/2000/svg"
-                    xmlns:xlink="http://www.w3.org/1999/xlink"
-                    x="0px"
-                    y="0px"
-                    viewBox="0 0 384 384"
-                    style="enable-background:new 0 0 384 384;"
-                    xml:space="preserve"
-                  >
-                    <g>
-                      <g>
-                        <circle cx="192" cy="42.667" r="42.667" />
-                      </g>
-                    </g>
-                    <g>
-                      <g>
-                        <circle cx="192" cy="192" r="42.667" />
-                      </g>
-                    </g>
-                    <g>
-                      <g>
-                        <circle cx="192" cy="341.333" r="42.667" />
-                      </g>
-                    </g>
-                  </svg>
-                </span>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colspan="4">Сумма расходов: {{ getFullSum }}</td>
-          </tr>
-        </tfoot>
-      </table>
-      <pagination-comp
-        :currentPage="currentPage"
-        :totalLength="getLengthPaymentsList"
-        :maxVisibleButtons="3"
-        :perPage="perPage"
-        :arrowsInitMax="true"
-        @pagechanged="onPageChange"
+      <pie-chart :chartDate="getPieData" />
+      <context-menu
+        :elementId="'context'"
+        :options="contextSettings"
+        :ref="'context'"
+        @option-clicked="optionClicked"
       />
     </div>
-    <pie-chart :chartDate="getPieData" />
-    <context-menu
-      :elementId="'context'"
-      :options="contextSettings"
-      :ref="'context'"
-      @option-clicked="optionClicked"
-    />
   </div>
 </template>
 

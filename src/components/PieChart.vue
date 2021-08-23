@@ -54,7 +54,6 @@ export default {
   },
   watch: {
     chartDate: {
-      immediate: true,
       handler() {
         this.updatePie();
       },

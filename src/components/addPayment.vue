@@ -2,7 +2,7 @@
   <div>
     <div class="payments__input-wrap">
       <label class="payments__checkbox-wrap">
-        <input type="checkbox" v-model="isCategory" />
+        <input type="checkbox" v-model="isCategory" data-testid="select" />
         Выбрать из существущей категории?
       </label>
       <label for="category" class="payments__input-label" v-if="!isCategory">
@@ -12,6 +12,7 @@
           id="category"
           placeholder="Payment category"
           v-model="category"
+          data-testid="inputCategory"
         />
       </label>
       <select
@@ -19,6 +20,7 @@
         id="categories"
         v-if="isCategory"
         v-model="category"
+        data-testid="selected"
       >
         <option
           v-for="(category, idx) in getCategories"
@@ -35,6 +37,7 @@
           id="value"
           placeholder="Payment value"
           v-model="value"
+          data-testid="inputValue"
         />
       </label>
       <label for="date" class="payments__input-label">
@@ -44,6 +47,7 @@
           id="date"
           placeholder="Payment date"
           v-model="date"
+          data-testid="date"
         />
       </label>
     </div>
@@ -101,7 +105,7 @@ export default {
       this.value = '';
     },
     onClose() {
-      this.$modal.close();
+      this.$emit('close');
     },
   },
   mounted() {

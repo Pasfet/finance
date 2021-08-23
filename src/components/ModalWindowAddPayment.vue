@@ -1,6 +1,10 @@
 <template>
   <div class="modal">
-    <div class="modal__backdrop" @click="closeModal()"></div>
+    <div
+      class="modal__backdrop"
+      @click="closeModal()"
+      data-testid="close"
+    ></div>
     <div class="modal__dialog">
       <div class="modal__header">
         {{ modalSettings.header }}
@@ -14,7 +18,7 @@
         </button>
       </div>
       <div class="modal__body">
-        <component :is="modalSettings.name" />
+        <component :is="modalSettings.name" @close="closeModal" />
       </div>
       <div class="modal__footer">
         {{ modalSettings.footer }}
