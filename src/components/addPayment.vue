@@ -1,128 +1,56 @@
 <template>
-  <div>
-    <button class="btn payments-add" @click="$refs.modalName.openModal()">
-      Add new cost &#43;
-    </button>
-    <modal ref="modalName">
-      <template v-slot:header>
-        <h1>New cost</h1>
-      </template>
-      <template v-slot:body>
-        <div class="payments__input-wrap">
-          <label for="category" class="payments__input-label">
-            <input
-              type="text"
-              class="payments__input"
-              id="category"
-              placeholder="Payment category"
-              v-model="category"
-            />
-          </label>
-          <label for="value" class="payments__input-label">
-            <input
-              type="text"
-              class="payments__input"
-              id="value"
-              placeholder="Payment value"
-              v-model="value"
-            />
-          </label>
-          <label for="date" class="payments__input-label">
-            <input
-              type="date"
-              class="payments__input"
-              id="date"
-              placeholder="Payment date"
-              v-model="date"
-            />
-          </label>
-        </div>
-      </template>
-      <template v-slot:footer>
-        <div>
-          <button
-            class="btn payments__btn payments__btn--cancel"
-            @click="$refs.modalName.closeModal()"
-          >
-            Cancel
-          </button>
-          <button class="btn payments__btn" @click="addCost">
-            Add &#43;
-          </button>
-        </div>
-      </template>
-    </modal>
-  </div>
+  <v-dialog v-model="dialog" width="500">
+    <template v-slot:activator="{ on }">
+      <v-btn dark color="teal" v-on="on">
+        Add new cost <v-icon>mdi-plus</v-icon>
+      </v-btn>
+    </template>
+    <add-payment-form
+      v-if="dialog"
+      :lastId="getLastId"
+      :categories="getCategoriesList"
+      @closeModal="onClose"
+      @addPayment="addPayment"
+    />
+  </v-dialog>
 </template>
 <script>
-import Modal from './Modal';
+import AddPaymentForm from './AddPaymentFormDialog.vue';
 export default {
   name: 'addPayment',
+  props: {
+    addFromUrl: {
+      type: Boolean,
+    },
+  },
   components: {
-    Modal,
+    AddPaymentForm,
   },
   data() {
     return {
-      date: '',
-      category: '',
-      value: '',
+      dialog: false,
     };
   },
   computed: {
-    getCurrentDate() {
-      const validDate = isNaN(new Date(this.date))
-        ? new Date()
-        : new Date(this.date);
-      const day = validDate.getDate();
-      const month = validDate.getMonth() + 1;
-      const year = validDate.getFullYear();
-      return `${day}.${month}.${year}`;
+    getLastId() {
+      return this.$store.getters.getLastId;
+    },
+    getCategoriesList() {
+      return this.$store.getters.getCategories;
     },
   },
   methods: {
-    addCost() {
-      const cost = {
-        date: this.getCurrentDate,
-        category: this.category || 'not specified',
-        value: this.value || 0,
-      };
-      this.$emit('addNewCost', cost);
-      this.date = '';
-      this.category = '';
-      this.value = '';
+    addPayment(payment) {
+      this.$store.dispatch('addPayment', payment);
+    },
+    onClose() {
+      this.dialog = false;
+    },
+  },
+  watch: {
+    addFromUrl() {
+      this.dialog = this.addFromUrl;
     },
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.payments {
-  &__btn {
-    margin-right: 10px;
-    &--cancel {
-      background: rgb(245, 38, 38);
-      border: 1px solid rgb(245, 38, 38);
-    }
-  }
-  &-add {
-    margin: 20px 0;
-    font-size: 18px;
-  }
-  &__input {
-    &-wrap {
-      display: flex;
-      flex-direction: column;
-    }
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    padding: 10px;
-    margin-bottom: 15px;
-    border-radius: 5px;
-    border: 1px solid #e2e2e2;
-    max-width: 450px;
-    width: 100%;
-    &::placeholder {
-      font-family: Avenir, Helvetica, Arial, sans-serif;
-    }
-  }
-}
-</style>
