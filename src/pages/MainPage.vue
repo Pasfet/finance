@@ -3,17 +3,21 @@
     <v-container>
       <v-row class="my-5">
         <v-col>
-          <add-component :addFromUrl="addFromUrl" />
+          <add-component :addFromUrl="addFromUrl" @add="isEmpty" />
         </v-col>
       </v-row>
-      <v-row class="text-center text-h1" v-if="!currentList.length">
+      <v-row class="text-center text-h1" v-if="empty">
         <v-col>
           Is empty :(
         </v-col>
       </v-row>
       <v-row v-else>
         <v-col lg="7">
-          <payments-table :payments="currentList" class="my-5 text-center" />
+          <payments-table
+            :payments="currentList"
+            class="my-5 text-center"
+            @deletedPayment="isEmpty"
+          />
           <pagination-comp :length="totalPages" @changePage="changePage" />
         </v-col>
         <v-col lg="5">
@@ -44,6 +48,7 @@ export default {
       paymentsList: [],
       height: 200,
       addFromUrl: false,
+      empty: true,
     };
   },
   computed: {
@@ -82,6 +87,13 @@ export default {
     changePage(page) {
       this.currentPage = page;
     },
+    isEmpty() {
+      if (this.paymentsList[0].length === 0) {
+        this.empty = true;
+      } else {
+        this.empty = false;
+      }
+    },
   },
   async mounted() {
     await this.$store.dispatch('fetchData');
@@ -94,6 +106,7 @@ export default {
     if (this.$route.params?.page) {
       this.currentPage = this.$route.params?.page;
     }
+    this.isEmpty();
   },
 };
 </script>

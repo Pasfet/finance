@@ -22,6 +22,7 @@
         <v-date-picker v-model="date" @input="menu = false"></v-date-picker>
       </v-menu>
       <v-checkbox
+        data-testid="checkbox"
         v-model="isCategory"
         :label="'Выбрать из существующей категории?'"
       ></v-checkbox>
@@ -30,13 +31,20 @@
         :items="categories"
         v-model="category"
         label="Category"
+        data-testid="select"
       >
       </v-select>
-      <v-text-field v-else v-model="category" label="Category"></v-text-field>
+      <v-text-field
+        v-else
+        v-model="category"
+        label="Category"
+        data-testid="categoryInput"
+      ></v-text-field>
       <v-text-field
         v-model.number="value"
         label="Value"
         type="number"
+        data-testid="valueInput"
       ></v-text-field>
     </v-card>
     <v-card-actions>

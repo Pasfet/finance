@@ -89,6 +89,7 @@ export default {
     },
     deletePayment(costId) {
       this.$store.dispatch('deletePayment', costId);
+      this.$emit('deletedPayment');
     },
     onClose() {
       this.dialog = false;

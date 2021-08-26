@@ -42,6 +42,7 @@ export default {
   methods: {
     addPayment(payment) {
       this.$store.dispatch('addPayment', payment);
+      this.$emit('add');
     },
     onClose() {
       this.dialog = false;
