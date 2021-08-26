@@ -1,11 +1,7 @@
 import Vuetify from 'vuetify';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import {
-  shallowMount,
-  createLocalVue,
-  enableAutoDestroy,
-} from '@vue/test-utils';
+import { mount, createLocalVue, enableAutoDestroy } from '@vue/test-utils';
 
 import Pagination from '../../src/components/PaginationComp';
 
@@ -25,7 +21,7 @@ describe('pagination component', () => {
   });
 
   const createComponent = settings => {
-    wrapper = shallowMount(Pagination, {
+    wrapper = mount(Pagination, {
       localVue,
       vuetify,
       router,
@@ -45,6 +41,17 @@ describe('pagination component', () => {
     await wrapper.setProps({ length: 2 });
 
     expect(wrapper.vm.length).toBe(2);
+  });
+
+  it('change page on click on pagination', async () => {
+    createComponent({ propsData: { length: 5 } });
+
+    await wrapper
+      .findAll('button')
+      .wrappers.find(w => w.text() === '3')
+      .trigger('click');
+
+    expect(wrapper.vm.page).toBe(3);
   });
 
   it('emit input pagination', () => {

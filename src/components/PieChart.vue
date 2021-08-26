@@ -55,11 +55,6 @@ export default {
         this.updatePie();
       },
     },
-    categories: {
-      handler() {
-        this.updatePie();
-      },
-    },
   },
 };
 </script>

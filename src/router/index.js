@@ -21,15 +21,15 @@ const router = new Router({
           component: () => import('../pages/MainPage'),
           name: 'EditPaymentFromUrl',
         },
+        {
+          path: '/page/:page',
+          component: () => import('../pages/MainPage'),
+          name: 'PageFromUrl',
+        },
       ],
     },
     {
-      path: '/:page',
-      component: () => import('../pages/MainPage'),
-      name: 'PageFromUrl',
-    },
-    {
-      path: '*',
+      path: '/*',
       component: () => import('../pages/Page404'),
       name: 'Page404',
     },

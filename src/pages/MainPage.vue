@@ -104,7 +104,12 @@ export default {
       this.addFromUrl = false;
     }
     if (this.$route.params?.page) {
-      this.currentPage = this.$route.params?.page;
+      if (this.totalPages < +this.$route.params.page) {
+        this.currentPage = this.totalPages;
+        this.$router.push(`/page/${this.currentPage}`);
+      } else {
+        this.currentPage = +this.$route.params.page;
+      }
     }
     this.isEmpty();
   },
