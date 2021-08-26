@@ -9,6 +9,7 @@
             max-width="100%"
             width="200px"
             @click="$emit(item.action)"
+            data-testid="btnContextMenu"
           >
             <v-icon class="mr-2"> {{ item.icon }} </v-icon>
             {{ item.title }}

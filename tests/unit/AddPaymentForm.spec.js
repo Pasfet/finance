@@ -1,16 +1,11 @@
 import Vuetify from 'vuetify';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import {
-  shallowMount,
-  mount,
-  createLocalVue,
-  enableAutoDestroy,
-} from '@vue/test-utils';
+import { mount, createLocalVue, enableAutoDestroy } from '@vue/test-utils';
 
 import AddPaymentForm from '../../src/components/AddPaymentFormDialog';
 
-describe('main page', () => {
+describe('Add payment form dialog', () => {
   enableAutoDestroy(beforeEach);
   let wrapper;
   let vuetify;
@@ -84,5 +79,20 @@ describe('main page', () => {
     await findButtonByText('Add').trigger('click');
 
     expect(spy).toHaveBeenCalledWith(expect.any(Object));
+  });
+
+  it('work watch on date', async () => {
+    const spy = jest.spyOn(AddPaymentForm.methods, 'formatDate');
+    createComponent();
+
+    const newDate = new Date(
+      Date.now() - new Date().getTimezoneOffset() * 60000
+    )
+      .toISOString()
+      .substr(0, 10);
+
+    await wrapper.setData({ date: newDate });
+
+    expect(spy).toHaveBeenCalledWith(newDate);
   });
 });

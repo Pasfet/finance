@@ -4,6 +4,7 @@
     v-model="page"
     color="teal"
     @input="next"
+    data-testid="pagination"
   ></v-pagination>
 </template>
 

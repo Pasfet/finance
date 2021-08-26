@@ -21,11 +21,16 @@
         </template>
         <v-date-picker v-model="date" @input="menu = false"></v-date-picker>
       </v-menu>
-      <v-text-field v-model="category" label="Category"></v-text-field>
+      <v-text-field
+        v-model="category"
+        label="Category"
+        data-testid="inputCategory"
+      ></v-text-field>
       <v-text-field
         v-model.number="value"
         label="Value"
         type="number"
+        data-testid="inputValue"
       ></v-text-field>
     </v-card>
     <v-card-actions>
@@ -79,7 +84,7 @@ export default {
       this.value = 0;
     },
     closeModal() {
-      this.$router.push('/');
+      this.$router.push('/').catch(() => {});
       this.$emit('closeEdit');
     },
     formatDate(date) {
