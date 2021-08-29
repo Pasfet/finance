@@ -7,6 +7,7 @@ export default new Vuex.Store({
   state: {
     paymentsList: [],
     categories: [],
+    filteredList: [],
   },
   mutations: {
     setPaymentsList(state, payload) {
@@ -41,6 +42,17 @@ export default new Vuex.Store({
       }
       localStorage.setItem('finance', JSON.stringify(state.paymentsList));
     },
+    setFilteredList(state, payload) {
+      if (payload) {
+        const regExp = new RegExp(payload, 'i');
+        state.filteredList = state.paymentsList.filter(payment =>
+          regExp.test(payment.category)
+        );
+      }
+      if (Array.isArray(payload) || payload === null) {
+        state.filteredList = state.paymentsList;
+      }
+    },
   },
   getters: {
     getPaymentsList: state => state.paymentsList,
@@ -52,7 +64,7 @@ export default new Vuex.Store({
     getPieData: state => {
       const data = [];
       const res = [];
-      state.paymentsList.forEach(cost => {
+      state.filteredList.forEach(cost => {
         const { category, value } = cost;
         data.push({ category, value });
       });
@@ -66,6 +78,7 @@ export default new Vuex.Store({
       });
       return res;
     },
+    getFilteredList: state => state.filteredList,
   },
   actions: {
     fetchData({ commit }) {
@@ -74,6 +87,7 @@ export default new Vuex.Store({
       if (localStorageData) {
         commit('setPaymentsList', JSON.parse(localStorageData));
         commit('setCategoriesList');
+        commit('setFilteredList', JSON.parse(localStorageData));
       }
     },
     addPayment({ commit }, payment) {
@@ -86,6 +100,9 @@ export default new Vuex.Store({
     },
     deletePayment({ commit }, paymentId) {
       commit('deletedPayment', paymentId);
+    },
+    searchList({ commit }, search) {
+      commit('setFilteredList', search);
     },
   },
 });

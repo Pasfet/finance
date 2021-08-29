@@ -42,6 +42,7 @@ export default {
   methods: {
     addPayment(payment) {
       this.$store.dispatch('addPayment', payment);
+      this.$store.dispatch('searchList', null);
       this.$emit('add');
     },
     onClose() {

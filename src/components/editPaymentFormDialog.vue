@@ -80,6 +80,7 @@ export default {
         value: this.value,
       };
       this.$emit('editPayment', cost);
+      this.$store.dispatch('searchList', null);
       this.category = '';
       this.value = 0;
     },

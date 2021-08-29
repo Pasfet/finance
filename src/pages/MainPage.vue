@@ -12,7 +12,7 @@
         </v-col>
       </v-row>
       <v-row v-else>
-        <v-col lg="7">
+        <v-col lg="7" sm="6">
           <payments-table
             :payments="currentList"
             class="my-5 text-center"
@@ -20,7 +20,7 @@
           />
           <pagination-comp :length="totalPages" @changePage="changePage" />
         </v-col>
-        <v-col lg="5">
+        <v-col lg="5" sm="6">
           <pie-chart :styles="stylesPieChart" :chartData="getPieData" />
         </v-col>
       </v-row>
@@ -45,7 +45,6 @@ export default {
     return {
       currentPage: 1,
       perPage: 5,
-      paymentsList: [],
       height: 200,
       addFromUrl: false,
       empty: true,
@@ -56,7 +55,7 @@ export default {
       return this.$store.getters.getPieData;
     },
     getData() {
-      return this.$store.getters.getPaymentsList;
+      return this.$store.getters.getFilteredList;
     },
     startIndex() {
       return (this.currentPage - 1) * this.perPage;
@@ -65,14 +64,14 @@ export default {
       return this.currentPage * this.perPage;
     },
     currentList() {
-      if (this.paymentsList[0]) {
-        return this.paymentsList[0].slice(this.startIndex, this.endIndex);
+      if (this.getData) {
+        return this.getData.slice(this.startIndex, this.endIndex);
       }
       return [];
     },
     totalPages() {
-      if (this.paymentsList[0]) {
-        return Math.ceil(this.paymentsList[0].length / this.perPage);
+      if (this.getData) {
+        return Math.ceil(this.getData.length / this.perPage);
       }
       return 0;
     },
@@ -88,16 +87,17 @@ export default {
       this.currentPage = page;
     },
     isEmpty() {
-      if (this.paymentsList[0].length === 0) {
-        this.empty = true;
-      } else {
-        this.empty = false;
+      if (this.getData) {
+        if (this.getData.length === 0) {
+          this.empty = true;
+        } else {
+          this.empty = false;
+        }
       }
     },
   },
   async mounted() {
     await this.$store.dispatch('fetchData');
-    this.$set(this.paymentsList, 0, this.getData);
     if (this.$route.params?.category && this.$route.path.includes('add')) {
       this.addFromUrl = true;
     } else {

@@ -28,7 +28,7 @@
               <payment-context-menu
                 :contextMenuList="contextMenuList"
                 @editPayment="editPayment(cost)"
-                @deletePayment="deletePayment(cost.id)"
+                @deletePayment="deletePayment(cost)"
               />
             </v-menu>
           </td>
@@ -87,8 +87,9 @@ export default {
       this.payment = cost;
       this.dialog = true;
     },
-    deletePayment(costId) {
-      this.$store.dispatch('deletePayment', costId);
+    deletePayment(cost) {
+      this.$store.dispatch('deletePayment', cost.id);
+      this.$store.dispatch('searchList', cost.category);
       this.$emit('deletedPayment');
     },
     onClose() {

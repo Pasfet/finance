@@ -1,11 +1,10 @@
 import Vuetify from 'vuetify';
 import Vue from 'vue';
+import Vuex from 'vuex';
 import VueRouter from 'vue-router';
 import { mount, createLocalVue, enableAutoDestroy } from '@vue/test-utils';
 
 import EditPaymentForm from '../../src/components/EditPaymentFormDialog';
-
-import { nextTick } from 'vue';
 
 describe('payment context menu', () => {
   enableAutoDestroy(beforeEach);
@@ -13,13 +12,24 @@ describe('payment context menu', () => {
   let vuetify;
   let router;
   let localVue;
+  let actions;
+  let store;
 
   beforeEach(() => {
     localVue = createLocalVue();
     Vue.use(Vuetify);
     localVue.use(VueRouter);
+    localVue.use(Vuex);
     vuetify = new Vuetify();
     router = new VueRouter();
+
+    actions = {
+      searchList: jest.fn(),
+    };
+
+    store = new Vuex.Store({
+      actions,
+    });
   });
 
   const findButtonByText = text =>
@@ -30,6 +40,7 @@ describe('payment context menu', () => {
       localVue,
       vuetify,
       router,
+      store,
       ...settings,
     });
   };
@@ -137,5 +148,6 @@ describe('payment context menu', () => {
 
     expect(wrapper.emitted().editPayment).toEqual([[expect.any(Object)]]);
     expect(spy).toHaveBeenCalled();
+    expect(actions.searchList).toHaveBeenCalled();
   });
 });

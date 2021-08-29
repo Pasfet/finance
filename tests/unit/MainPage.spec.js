@@ -12,6 +12,7 @@ import MainPage from '../../src/pages/MainPage';
 import PaymentTable from '../../src/components/PaymentsTable';
 import AddPayment from '../../src/components/addPayment';
 import Pagination from '../../src/components/PaginationComp';
+import { nextTick } from 'vue';
 
 describe('main page', () => {
   enableAutoDestroy(beforeEach);
@@ -33,7 +34,7 @@ describe('main page', () => {
 
     getters = {
       getPieData: () => [],
-      getPaymentsList: () => [],
+      getFilteredList: () => [],
     };
     actions = {
       fetchData: jest.fn(),
@@ -64,7 +65,6 @@ describe('main page', () => {
 
   it('render table if data does not empty', async () => {
     createComponent();
-
     await wrapper.setData({ empty: false });
 
     expect(wrapper.findComponent(PaymentTable).exists()).toBe(true);
@@ -78,14 +78,9 @@ describe('main page', () => {
     });
     await wrapper.setData({
       empty: false,
-      paymentsList: [
-        [{ id: 1, category: 'test', value: 100, date: '10.05.2012' }],
-      ],
     });
 
-    expect(wrapper.text()).toMatch(new RegExp('test', 'gi'));
-    expect(wrapper.text()).toMatch(new RegExp('10.05.2012', 'gi'));
-    expect(wrapper.text()).toMatch(new RegExp('100', 'gi'));
+    expect(wrapper.findComponent(PaymentTable).exists()).toBe(true);
   });
 
   it('render addPayment component', () => {
@@ -102,7 +97,6 @@ describe('main page', () => {
 
   it('emit event add to payment list', async () => {
     createComponent();
-    await wrapper.setData({ paymentsList: [[{}]] });
 
     wrapper.findComponent(AddPayment).vm.$emit('add');
 
@@ -111,7 +105,7 @@ describe('main page', () => {
 
   it('emit event delete from payments list', async () => {
     createComponent();
-    await wrapper.setData({ empty: false, paymentsList: [[{}]] });
+    await wrapper.setData({ empty: false });
 
     wrapper.findComponent(PaymentTable).vm.$emit('deletedPayment');
 
@@ -127,9 +121,6 @@ describe('main page', () => {
     createComponent();
     await wrapper.setData({
       empty: false,
-      paymentsList: [
-        [{ id: 1, category: 'test', value: 100, date: '10.05.2012' }],
-      ],
     });
 
     expect(wrapper.findComponent(Pagination).exists()).toBe(true);
@@ -139,76 +130,6 @@ describe('main page', () => {
     createComponent();
     await wrapper.setData({
       empty: false,
-      paymentsList: [
-        [
-          {
-            id: 1,
-            category: 'test',
-            value: 100,
-            date: '10.05.2012',
-          },
-          {
-            id: 2,
-            category: 'test',
-            value: 100,
-            date: '10.05.2012',
-          },
-          {
-            id: 3,
-            category: 'test',
-            value: 100,
-            date: '10.05.2012',
-          },
-          {
-            id: 4,
-            category: 'test',
-            value: 100,
-            date: '10.05.2012',
-          },
-          {
-            id: 5,
-            category: 'test',
-            value: 100,
-            date: '10.05.2012',
-          },
-          {
-            id: 6,
-            category: 'test',
-            value: 100,
-            date: '10.05.2012',
-          },
-          {
-            id: 7,
-            category: 'test',
-            value: 100,
-            date: '10.05.2012',
-          },
-          {
-            id: 8,
-            category: 'test',
-            value: 100,
-            date: '10.05.2012',
-          },
-          {
-            id: 9,
-            category: 'test',
-            value: 100,
-            date: '10.05.2012',
-          },
-          {
-            id: 10,
-            category: 'test',
-            value: 100,
-            date: '10.05.2012',
-          },
-          {
-            id: 11,
-            category: 'test',
-            value: 100,
-            date: '10.05.2012',
-          },
-        ],
-      ],
     });
 
     wrapper.findComponent(Pagination).vm.$emit('changePage', 2);

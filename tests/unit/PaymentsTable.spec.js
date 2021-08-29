@@ -32,6 +32,7 @@ describe('payments table component', () => {
     actions = {
       editPayment: jest.fn(),
       deletePayment: jest.fn(),
+      searchList: jest.fn(),
     };
 
     store = new Vuex.Store({

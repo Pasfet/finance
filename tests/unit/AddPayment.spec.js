@@ -33,6 +33,7 @@ describe('Add payment component', () => {
 
     actions = {
       addPayment: jest.fn(),
+      searchList: jest.fn(),
     };
 
     store = new Vuex.Store({
