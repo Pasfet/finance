@@ -53,26 +53,22 @@ export default {
       return this.$store.getters.getPaymentsList;
     },
   },
-
+  methods: {
+    updateData() {
+      this.items = this.getData;
+    },
+  },
+  mounted() {
+    this.updateData();
+  },
   watch: {
-    search() {
-      setTimeout(() => {
-        this.$store.dispatch('searchList', this.search);
-      }, 1000);
-      // Items have already been loaded
-      if (this.items.length > 0) return;
-
+    search(newVal) {
       this.isLoading = true;
-
-      // Lazily load input items
-      let promise = new Promise(resolve => {
-        setTimeout(() => {
-          resolve(this.getData);
-        }, 1000);
-      });
-
-      promise.then(result => (this.items = result));
-      promise.finally(() => (this.isLoading = false));
+      this.$store.dispatch('searchList', newVal);
+      setTimeout(() => {
+        this.isLoading = false;
+      }, 1000);
+      this.updateData();
     },
   },
 };

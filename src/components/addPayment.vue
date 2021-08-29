@@ -42,7 +42,7 @@ export default {
   methods: {
     addPayment(payment) {
       this.$store.dispatch('addPayment', payment);
-      this.$store.dispatch('searchList', null);
+      this.$store.dispatch('searchList', payment.category);
       this.$emit('add');
     },
     onClose() {

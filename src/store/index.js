@@ -49,7 +49,7 @@ export default new Vuex.Store({
           regExp.test(payment.category)
         );
       }
-      if (Array.isArray(payload) || payload === null) {
+      if (Array.isArray(payload) || !payload) {
         state.filteredList = state.paymentsList;
       }
     },
