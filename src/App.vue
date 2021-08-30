@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar app color="teal" dark>
+    <v-app-bar app color="teal" dark v-if="isAuth">
       <div class="text-xl-h4 text-sm-h5 mr-5">My payment</div>
       <header-search />
     </v-app-bar>
@@ -16,6 +16,11 @@ export default {
   name: 'App',
   components: {
     headerSearch,
+  },
+  data() {
+    return {
+      isAuth: false,
+    };
   },
 };
 </script>
