@@ -11,8 +11,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="cost of payments" :key="cost.id">
-          <td>{{ cost.id }}</td>
+        <tr v-for="(cost, idx) of payments" :key="cost.id">
+          <td>{{ +getKeys[idx] + 1 }}</td>
           <td>{{ cost.date }}</td>
           <td>
             {{ `${cost.category[0].toUpperCase()}${cost.category.slice(1)}` }}
@@ -78,6 +78,11 @@ export default {
         },
       ],
     };
+  },
+  computed: {
+    getKeys() {
+      return Object.keys(this.payments);
+    },
   },
   methods: {
     editPaymentForm(payment) {

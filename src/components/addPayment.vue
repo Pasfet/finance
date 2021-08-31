@@ -7,7 +7,6 @@
     </template>
     <add-payment-form
       v-if="dialog"
-      :lastId="getLastId"
       :categories="getCategoriesList"
       @closeModal="onClose"
       @addPayment="addPayment"
@@ -32,9 +31,6 @@ export default {
     };
   },
   computed: {
-    getLastId() {
-      return this.$store.getters.getLastId;
-    },
     getCategoriesList() {
       return this.$store.getters.getCategories;
     },

@@ -1,20 +1,13 @@
 import Vuetify from 'vuetify';
 import Vue from 'vue';
 import Vuex from 'vuex';
-import VueRouter from 'vue-router';
-import {
-  shallowMount,
-  createLocalVue,
-  enableAutoDestroy,
-} from '@vue/test-utils';
+import { mount, createLocalVue, enableAutoDestroy } from '@vue/test-utils';
 
 import MainPage from '../../src/pages/MainPage';
-import PaymentTable from '../../src/components/PaymentsTable';
-import AddPayment from '../../src/components/addPayment';
-import Pagination from '../../src/components/PaginationComp';
-import { nextTick } from 'vue';
+import Dashboard from '../../src/pages/DashboardApp';
+import headerSearch from '../../src/components/headerSearch';
 
-describe('main page', () => {
+describe('main page when state does not empty', () => {
   enableAutoDestroy(beforeEach);
   let wrapper;
   let getters;
@@ -22,22 +15,40 @@ describe('main page', () => {
   let store;
   let vuetify;
   let router;
+  let route;
   let localVue;
 
   beforeEach(() => {
     localVue = createLocalVue();
     Vue.use(Vuetify);
     localVue.use(Vuex);
-    localVue.use(VueRouter);
+    router = {
+      push: jest.fn(),
+    };
+    route = {
+      params: {
+        category: 'testFromURL',
+        page: 1,
+      },
+      path: '/dashboard',
+    };
+
     vuetify = new Vuetify();
-    router = new VueRouter();
 
     getters = {
+      getInfo: () => {
+        return {
+          name: 'name',
+        };
+      },
+      getPaymentsList: () => [],
       getPieData: () => [],
       getFilteredList: () => [],
     };
     actions = {
       fetchData: jest.fn(),
+      fetchInfo: jest.fn(),
+      logOut: jest.fn(),
     };
 
     store = new Vuex.Store({
@@ -46,96 +57,132 @@ describe('main page', () => {
     });
   });
 
+  const findButtonByText = text =>
+    wrapper.findAll('.v-btn').wrappers.find(w => w.text() === text);
+
   const createComponent = settings => {
-    wrapper = shallowMount(MainPage, {
+    wrapper = mount(MainPage, {
       localVue,
       vuetify,
       store,
-      router,
+      mocks: {
+        $router: router,
+        $route: route,
+      },
       ...settings,
     });
   };
 
-  it('render msg is empty, if payments list is empty', () => {
+  it('render headerSearch component', () => {
     createComponent();
 
-    expect(wrapper.text()).toContain('Is empty :(');
-    expect(wrapper.findComponent(PaymentTable).exists()).toBe(false);
+    expect(wrapper.findComponent(headerSearch).exists()).toBe(true);
   });
 
-  it('render table if data does not empty', async () => {
+  it('render dashboard component', async () => {
     createComponent();
-    await wrapper.setData({ empty: false });
 
-    expect(wrapper.findComponent(PaymentTable).exists()).toBe(true);
+    expect(wrapper.findComponent(Dashboard).exists()).toBe(true);
   });
 
-  it('render table with payment', async () => {
-    createComponent({
-      stubs: {
-        'payments-table': PaymentTable,
+  it('click on btn getInfo name to render btn Exist', async () => {
+    createComponent();
+
+    await findButtonByText('name').trigger('click');
+
+    expect(wrapper.text()).toContain('Exist');
+  });
+
+  it('click on btn Exist toHaveBeenCalled action logOut', async () => {
+    createComponent();
+    await findButtonByText('name').trigger('click');
+
+    await findButtonByText('Exist').trigger('click');
+
+    expect(actions.logOut).toHaveBeenCalled();
+  });
+
+  it('push to login page', async () => {
+    createComponent();
+    await findButtonByText('name').trigger('click');
+
+    await findButtonByText('Exist').trigger('click');
+
+    expect(wrapper.vm.$router.push).toHaveBeenCalledTimes(2);
+    expect(wrapper.vm.$router.push).toHaveBeenCalledWith('/login');
+  });
+  it('call fetchData when paymentsList is empty', () => {
+    createComponent();
+
+    expect(actions.fetchData).toHaveBeenCalled();
+  });
+});
+
+describe('main page when state is empty', () => {
+  let wrapper;
+  let getters;
+  let actions;
+  let store;
+  let vuetify;
+  let router;
+  let route;
+  let localVue;
+  let state;
+
+  beforeEach(() => {
+    localVue = createLocalVue();
+    Vue.use(Vuetify);
+    localVue.use(Vuex);
+    router = {
+      push: jest.fn(),
+    };
+    route = {
+      params: {
+        category: 'testFromURL',
       },
+      path: '/dashboard',
+    };
+    vuetify = new Vuetify();
+
+    state = {
+      info: {},
+    };
+
+    getters = {
+      getInfo: () => state.info,
+      getPaymentsList: () => state.paymentsList,
+      getPieData: () => [],
+      getFilteredList: () => [],
+    };
+    actions = {
+      fetchData: jest.fn(),
+      fetchInfo: jest.fn(),
+      logOut: jest.fn(),
+    };
+
+    store = new Vuex.Store({
+      state,
+      getters,
+      actions,
     });
-    await wrapper.setData({
-      empty: false,
+  });
+
+  const createComponent = settings => {
+    wrapper = mount(MainPage, {
+      localVue,
+      vuetify,
+      store,
+      mocks: {
+        $router: router,
+        $route: route,
+      },
+      ...settings,
     });
+  };
 
-    expect(wrapper.findComponent(PaymentTable).exists()).toBe(true);
-  });
-
-  it('render addPayment component', () => {
+  it('call action fetchInfo', () => {
     createComponent();
 
-    expect(wrapper.findComponent(AddPayment).exists()).toBe(true);
-  });
-
-  it('does not render paymentsTable component if payments list is empty', () => {
-    createComponent();
-
-    expect(wrapper.findComponent(PaymentTable).exists()).toBe(false);
-  });
-
-  it('emit event add to payment list', async () => {
-    createComponent();
-
-    wrapper.findComponent(AddPayment).vm.$emit('add');
-
-    expect(wrapper.findComponent(AddPayment).emitted().add).toEqual([[]]);
-  });
-
-  it('emit event delete from payments list', async () => {
-    createComponent();
-    await wrapper.setData({ empty: false });
-
-    wrapper.findComponent(PaymentTable).vm.$emit('deletedPayment');
-
-    expect(
-      wrapper.findComponent(PaymentTable).emitted().deletedPayment
-    ).toEqual([[]]);
-  });
-
-  it('render pagination component', async () => {
-    getters.getPaymentsList = [
-      { id: 1, category: 'test', value: 100, date: '10.05.2012' },
-    ];
-    createComponent();
-    await wrapper.setData({
-      empty: false,
-    });
-
-    expect(wrapper.findComponent(Pagination).exists()).toBe(true);
-  });
-
-  it('emit event pagechange from pagination', async () => {
-    createComponent();
-    await wrapper.setData({
-      empty: false,
-    });
-
-    wrapper.findComponent(Pagination).vm.$emit('changePage', 2);
-
-    expect(wrapper.findComponent(Pagination).emitted().changePage).toEqual([
-      [2],
-    ]);
+    expect(actions.fetchInfo).toHaveBeenCalled();
   });
 });

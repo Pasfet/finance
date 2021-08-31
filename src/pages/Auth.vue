@@ -2,116 +2,92 @@
   <v-card width="500" class="mx-auto my-16 pa-5">
     <form>
       <v-text-field
-        v-model="name"
-        :error-messages="nameErrors"
-        :counter="10"
-        label="Name"
-        required
-        @input="$v.name.$touch()"
-        @blur="$v.name.$touch()"
-      ></v-text-field>
-      <v-text-field
-        v-model="email"
+        v-model="form.email"
         :error-messages="emailErrors"
         label="E-mail"
         required
-        @input="$v.email.$touch()"
-        @blur="$v.email.$touch()"
+        @input="$v.form.email.$touch()"
+        @blur="$v.form.email.$touch()"
+        data-testid="inputEmail"
       ></v-text-field>
       <v-text-field
-        v-model="login"
-        :error-messages="loginError"
-        label="Your login"
+        v-model="form.password"
+        :error-messages="passwordError"
+        label="Your password"
         required
-        :counter="20"
-        @input="$v.login.$touch()"
-        @blur="$v.login.$touch()"
+        type="password"
+        @input="$v.form.password.$touch()"
+        @blur="$v.form.password.$touch()"
+        data-testid="inputPassword"
       ></v-text-field>
-      <v-checkbox
-        v-model="checkbox"
-        :error-messages="checkboxErrors"
-        label="Do you agree?"
-        required
-        @change="$v.checkbox.$touch()"
-        @blur="$v.checkbox.$touch()"
-      ></v-checkbox>
 
-      <v-btn class="mr-4" @click="submit" color="teal" dark>
+      <v-btn class="mr-4" @click="submitRegistration" color="teal" dark>
         log in
       </v-btn>
-      <v-btn @click="clear" color="red" dark>
-        clear
+      <v-btn @click="toSignUp" color="primary" dark>
+        sign up
       </v-btn>
     </form>
+    <div v-if="error" class="red white--text pa-2 mt-2">{{ error }}</div>
   </v-card>
 </template>
 
 <script>
 import { validationMixin } from 'vuelidate';
-import { required, maxLength, email } from 'vuelidate/lib/validators';
+import { required, email, minLength } from 'vuelidate/lib/validators';
 export default {
   name: 'Auth',
   mixins: [validationMixin],
 
   validations: {
-    name: { required, maxLength: maxLength(10) },
-    email: { required, email },
-    login: { required, maxLength: maxLength(20) },
-    checkbox: {
-      checked(val) {
-        return val;
-      },
+    form: {
+      email: { required, email },
+      password: { required, minLength: minLength(6) },
     },
   },
   data() {
     return {
-      name: '',
-      email: '',
-      login: '',
-      checkbox: false,
+      form: {
+        email: '',
+        password: '',
+      },
+      error: null,
+      submitted: false,
     };
   },
   computed: {
-    checkboxErrors() {
-      const errors = [];
-      if (!this.$v.checkbox.$dirty) return errors;
-      !this.$v.checkbox.checked && errors.push('You must agree to continue!');
-      return errors;
-    },
-    nameErrors() {
-      const errors = [];
-      if (!this.$v.name.$dirty) return errors;
-      !this.$v.name.maxLength &&
-        errors.push('Name must be at most 10 characters long');
-      !this.$v.name.required && errors.push('Name is required.');
-      return errors;
-    },
     emailErrors() {
       const errors = [];
-      if (!this.$v.email.$dirty) return errors;
-      !this.$v.email.email && errors.push('Must be valid e-mail');
-      !this.$v.email.required && errors.push('E-mail is required');
+      if (!this.$v.form.email.$dirty) return errors;
+      !this.$v.form.email.email && errors.push('Must be valid e-mail');
+      !this.$v.form.email.required && errors.push('E-mail is required');
       return errors;
     },
-    loginError() {
+    passwordError() {
       const errors = [];
-      if (!this.$v.login.$dirty) return errors;
-      !this.$v.login.maxLength &&
-        errors.push('Login must be at most 20 characters long');
-      !this.$v.login.required && errors.push('Login is required');
+      if (!this.$v.form.password.$dirty) return errors;
+      !this.$v.form.password.required && errors.push('Password is required');
+      !this.$v.form.password.minLength && errors.push('Min length 6 symbols');
       return errors;
     },
   },
   methods: {
-    submit() {
+    async submitRegistration() {
+      this.submitted = true;
       this.$v.$touch();
+      if (this.$v.$invalid) {
+        return false;
+      } else {
+        try {
+          await this.$store.dispatch('logIn', this.form);
+          this.$router.push('/dashboard');
+        } catch (e) {
+          this.error = e.message;
+        }
+      }
     },
-    clear() {
-      this.$v.$reset();
-      this.name = '';
-      this.email = '';
-      this.checkbox = false;
-      this.login = '';
+    toSignUp() {
+      this.$router.push('/register');
     },
   },
 };

@@ -80,12 +80,11 @@ export default {
         value: this.value,
       };
       this.$emit('editPayment', cost);
-      this.$store.dispatch('searchList', null);
       this.category = '';
       this.value = 0;
     },
     closeModal() {
-      this.$router.push('/').catch(() => {});
+      this.$router.push('/dashboard').catch(() => {});
       this.$emit('closeEdit');
     },
     formatDate(date) {

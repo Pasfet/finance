@@ -28,21 +28,17 @@ describe('Add payment form dialog', () => {
       localVue,
       vuetify,
       router,
-      propsData: {
-        categories: [],
-        lastId: 0,
-      },
       ...settings,
     });
   };
 
   it('render add payment form', () => {
-    createComponent();
+    createComponent({ propsData: { categories: [] } });
 
     expect(wrapper.text()).toContain('Add payment form');
   });
   it('checked checkbox', () => {
-    createComponent();
+    createComponent({ propsData: { categories: [] } });
 
     wrapper.find('[data-testid=checkbox]').trigger('change');
 
@@ -50,7 +46,7 @@ describe('Add payment form dialog', () => {
   });
 
   it('set category', async () => {
-    createComponent();
+    createComponent({ propsData: { categories: [] } });
 
     const input = wrapper.find('[data-testid=categoryInput]');
     await input.setValue('test');
@@ -58,14 +54,14 @@ describe('Add payment form dialog', () => {
     expect(input.element.value).toBe('test');
   });
   it('set value', async () => {
-    createComponent();
+    createComponent({ propsData: { categories: [] } });
 
     await wrapper.find('[data-testid=valueInput]').setValue('100');
 
     expect(wrapper.find('[data-testid=valueInput]').element.value).toBe('100');
   });
   it('click on close button', async () => {
-    createComponent();
+    createComponent({ propsData: { categories: [] } });
 
     await findButtonByText('Close').trigger('click');
     wrapper.vm.$emit('closeModal');
@@ -74,7 +70,7 @@ describe('Add payment form dialog', () => {
   });
   it('click add btn', async () => {
     const spy = jest.spyOn(AddPaymentForm.methods, 'addCost');
-    createComponent();
+    createComponent({ propsData: { categories: [] } });
 
     await findButtonByText('Add').trigger('click');
 
@@ -83,7 +79,7 @@ describe('Add payment form dialog', () => {
 
   it('work watch on date', async () => {
     const spy = jest.spyOn(AddPaymentForm.methods, 'formatDate');
-    createComponent();
+    createComponent({ propsData: { categories: [] } });
 
     const newDate = new Date(
       Date.now() - new Date().getTimezoneOffset() * 60000

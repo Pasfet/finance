@@ -132,7 +132,6 @@ describe('payment context menu', () => {
   });
 
   it('click edit btn', async () => {
-    const spy = jest.spyOn(EditPaymentForm.methods, 'closeModal');
     createComponent({
       propsData: {
         payment: {
@@ -147,7 +146,5 @@ describe('payment context menu', () => {
     await findButtonByText('Edit').trigger('click');
 
     expect(wrapper.emitted().editPayment).toEqual([[expect.any(Object)]]);
-    expect(spy).toHaveBeenCalled();
-    expect(actions.searchList).toHaveBeenCalled();
   });
 });

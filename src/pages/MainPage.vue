@@ -1,117 +1,72 @@
 <template>
   <div>
-    <v-container>
-      <v-row class="my-5">
-        <v-col>
-          <add-component :addFromUrl="addFromUrl" @add="isEmpty" />
-        </v-col>
-      </v-row>
-      <v-row class="text-center text-h1" v-if="empty">
-        <v-col>
-          Is empty :(
-        </v-col>
-      </v-row>
-      <v-row v-else>
-        <v-col lg="7" sm="6">
-          <payments-table
-            :payments="currentList"
-            class="my-5 text-center"
-            @deletedPayment="isEmpty"
-          />
-          <pagination-comp :length="totalPages" @changePage="changePage" />
-        </v-col>
-        <v-col lg="5" sm="6">
-          <pie-chart :styles="stylesPieChart" :chartData="getPieData" />
-        </v-col>
-      </v-row>
-    </v-container>
+    <v-app-bar app color="teal" dark>
+      <div class="text-xl-h4 text-sm-h5 mr-5">My payment</div>
+      <header-search />
+      <v-menu offset-y>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            class="ml-2 black--text"
+            color="white"
+            dark
+            v-bind="attrs"
+            v-on="on"
+          >
+            {{ getInfo.name }}
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item>
+            <v-list-item-title>
+              <v-btn @click="signOut" color="red" dark data-testid="btnSignOut"
+                >Exist</v-btn
+              >
+            </v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+    </v-app-bar>
+    <dashboard-app :getData="getData" :getPieData="getPieData" />
   </div>
 </template>
 
 <script>
-import AddComponent from '../components/addPayment.vue';
-import PaymentsTable from '../components/PaymentsTable.vue';
-import PaginationComp from '../components/PaginationComp.vue';
-import PieChart from '../components/PieChart.vue';
+import headerSearch from '../components/headerSearch.vue';
+import DashboardApp from './DashboardApp.vue';
+
 export default {
   name: 'PageMain',
   components: {
-    AddComponent,
-    PaymentsTable,
-    PaginationComp,
-    PieChart,
-  },
-  data() {
-    return {
-      currentPage: 1,
-      perPage: 5,
-      height: 200,
-      addFromUrl: false,
-      empty: true,
-    };
+    headerSearch,
+    DashboardApp,
   },
   computed: {
+    getInfo() {
+      return this.$store.getters.getInfo;
+    },
+    getPaymentsList() {
+      return this.$store.getters.getPaymentsList;
+    },
     getPieData() {
       return this.$store.getters.getPieData;
     },
     getData() {
       return this.$store.getters.getFilteredList;
     },
-    startIndex() {
-      return (this.currentPage - 1) * this.perPage;
-    },
-    endIndex() {
-      return this.currentPage * this.perPage;
-    },
-    currentList() {
-      if (this.getData) {
-        return this.getData.slice(this.startIndex, this.endIndex);
-      }
-      return [];
-    },
-    totalPages() {
-      if (this.getData) {
-        return Math.ceil(this.getData.length / this.perPage);
-      }
-      return 0;
-    },
-    stylesPieChart() {
-      return {
-        height: `${this.height}px`,
-        position: 'relative',
-      };
-    },
   },
   methods: {
-    changePage(page) {
-      this.currentPage = page;
-    },
-    isEmpty() {
-      if (this.getData) {
-        if (this.getData.length === 0) {
-          this.empty = true;
-        } else {
-          this.empty = false;
-        }
-      }
+    async signOut() {
+      await this.$store.dispatch('logOut');
+      this.$router.push('/login');
     },
   },
   async mounted() {
-    await this.$store.dispatch('fetchData');
-    if (this.$route.params?.category && this.$route.path.includes('add')) {
-      this.addFromUrl = true;
-    } else {
-      this.addFromUrl = false;
+    if (!Object.keys(this.getInfo).length) {
+      await this.$store.dispatch('fetchInfo');
     }
-    if (this.$route.params?.page) {
-      if (this.totalPages < +this.$route.params.page) {
-        this.currentPage = this.totalPages;
-        this.$router.push(`/page/${this.currentPage}`);
-      } else {
-        this.currentPage = +this.$route.params.page;
-      }
+    if (!Object.keys(this.getPaymentsList).length) {
+      await this.$store.dispatch('fetchData');
     }
-    this.isEmpty();
   },
 };
 </script>
