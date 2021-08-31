@@ -5,7 +5,7 @@ import { mount, createLocalVue, enableAutoDestroy } from '@vue/test-utils';
 
 import { nextTick } from 'vue';
 
-import Auth from '../../src/pages/Auth';
+import Auth from '@/pages/Auth';
 
 describe('Add payment component', () => {
   enableAutoDestroy(beforeEach);

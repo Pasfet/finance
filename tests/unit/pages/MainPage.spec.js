@@ -3,9 +3,9 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import { mount, createLocalVue, enableAutoDestroy } from '@vue/test-utils';
 
-import MainPage from '../../src/pages/MainPage';
-import Dashboard from '../../src/pages/DashboardApp';
-import headerSearch from '../../src/components/headerSearch';
+import MainPage from '@/pages/MainPage';
+import Dashboard from '@/pages/DashboardApp';
+import headerSearch from '@/components/headerSearch';
 
 describe('main page when state does not empty', () => {
   enableAutoDestroy(beforeEach);
@@ -115,6 +115,14 @@ describe('main page when state does not empty', () => {
     createComponent();
 
     expect(actions.fetchData).toHaveBeenCalled();
+  });
+  it('click on about btn', async () => {
+    createComponent();
+
+    await findButtonByText('About').trigger('click');
+
+    expect(wrapper.vm.$router.push).toHaveBeenCalledTimes(2);
+    expect(wrapper.vm.$router.push).toHaveBeenCalledWith('/about');
   });
 });
 

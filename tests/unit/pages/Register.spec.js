@@ -5,7 +5,7 @@ import { mount, createLocalVue, enableAutoDestroy } from '@vue/test-utils';
 
 import { nextTick } from 'vue';
 
-import Register from '../../src/pages/Register';
+import Register from '@/pages/Register';
 
 describe('Add payment component', () => {
   enableAutoDestroy(beforeEach);

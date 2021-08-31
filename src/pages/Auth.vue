@@ -1,5 +1,5 @@
 <template>
-  <v-card width="500" class="mx-auto my-16 pa-5">
+  <v-card width="500" class="mx-auto my-15 pa-5">
     <form>
       <v-text-field
         v-model="form.email"

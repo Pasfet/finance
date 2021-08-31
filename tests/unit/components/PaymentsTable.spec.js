@@ -8,9 +8,9 @@ import {
   enableAutoDestroy,
 } from '@vue/test-utils';
 
-import PaymentTable from '../../src/components/PaymentsTable';
-import PaymentContextMenu from '../../src/components/PaymentContextMenu';
-import EditPaymentForm from '../../src/components/EditPaymentFormDialog';
+import PaymentTable from '@/components/PaymentsTable';
+import PaymentContextMenu from '@/components/PaymentContextMenu';
+import EditPaymentForm from '@/components/EditPaymentFormDialog';
 
 describe('payments table component', () => {
   enableAutoDestroy(beforeEach);

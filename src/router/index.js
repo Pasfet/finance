@@ -8,6 +8,11 @@ const router = new Router({
   mode: 'history',
   routes: [
     {
+      path: '/',
+      component: () => import('../pages/Auth'),
+      name: 'Auth',
+    },
+    {
       path: '/login',
       component: () => import('../pages/Auth'),
       name: 'Login',
@@ -30,7 +35,7 @@ const router = new Router({
           meta: { auth: true },
         },
         {
-          path: '/dashboard/edit/:id/:category',
+          path: '/dashboard/edit/:id/',
           component: () => import('../pages/MainPage'),
           name: 'EditPaymentFromUrl',
           meta: { auth: true },
@@ -44,9 +49,16 @@ const router = new Router({
       ],
     },
     {
+      path: '/about',
+      component: () => import('../pages/About'),
+      meta: { auth: true },
+      name: 'About',
+    },
+    {
       path: '/*',
       component: () => import('../pages/Page404'),
       name: 'Page404',
+      meta: { auth: true },
     },
   ],
 });

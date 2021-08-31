@@ -3,7 +3,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import { mount, createLocalVue, enableAutoDestroy } from '@vue/test-utils';
 
-import Search from '../../src/components/headerSearch';
+import Search from '@/components/headerSearch';
 
 describe('Add payment component', () => {
   enableAutoDestroy(beforeEach);

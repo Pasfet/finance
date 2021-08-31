@@ -3,6 +3,9 @@
     <v-app-bar app color="teal" dark>
       <div class="text-xl-h4 text-sm-h5 mr-5">My payment</div>
       <header-search />
+      <v-btn @click="toAbout" class="mx-3" color="teal darken-1" dark>
+        About
+      </v-btn>
       <v-menu offset-y>
         <template v-slot:activator="{ on, attrs }">
           <v-btn
@@ -58,6 +61,9 @@ export default {
     async signOut() {
       await this.$store.dispatch('logOut');
       this.$router.push('/login');
+    },
+    toAbout() {
+      this.$router.push('/about');
     },
   },
   async mounted() {

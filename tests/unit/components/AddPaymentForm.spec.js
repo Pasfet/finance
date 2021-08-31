@@ -3,7 +3,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { mount, createLocalVue, enableAutoDestroy } from '@vue/test-utils';
 
-import AddPaymentForm from '../../src/components/AddPaymentFormDialog';
+import AddPaymentForm from '@/components/AddPaymentFormDialog';
 
 describe('Add payment form dialog', () => {
   enableAutoDestroy(beforeEach);

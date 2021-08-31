@@ -7,8 +7,8 @@ import {
   enableAutoDestroy,
 } from '@vue/test-utils';
 
-import AddPayment from '../../src/components/addPayment';
-import AddPaymentForm from '../../src/components/AddPaymentFormDialog';
+import AddPayment from '@/components/addPayment';
+import AddPaymentForm from '@/components/AddPaymentFormDialog';
 
 describe('Add payment component', () => {
   enableAutoDestroy(beforeEach);
@@ -27,7 +27,6 @@ describe('Add payment component', () => {
     vuetify = new Vuetify();
 
     getters = {
-      getLastId: () => 5,
       getCategories: () => [],
     };
 

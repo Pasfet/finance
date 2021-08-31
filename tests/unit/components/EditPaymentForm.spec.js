@@ -4,7 +4,7 @@ import Vuex from 'vuex';
 import VueRouter from 'vue-router';
 import { mount, createLocalVue, enableAutoDestroy } from '@vue/test-utils';
 
-import EditPaymentForm from '../../src/components/EditPaymentFormDialog';
+import EditPaymentForm from '@/components/EditPaymentFormDialog';
 
 describe('payment context menu', () => {
   enableAutoDestroy(beforeEach);

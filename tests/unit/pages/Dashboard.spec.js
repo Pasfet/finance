@@ -3,12 +3,11 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import { mount, createLocalVue, enableAutoDestroy } from '@vue/test-utils';
 
-import Dashboard from '../../src/pages/DashboardApp';
-import AddPayment from '../../src/components/addPayment';
-import PaymentsTable from '../../src/components/PaymentsTable';
-import Pagination from '../../src/components/PaginationComp';
-import PieChart from '../../src/components/PieChart';
-import { nextTick } from 'vue';
+import Dashboard from '@/pages/DashboardApp';
+import AddPayment from '@/components/addPayment';
+import PaymentsTable from '@/components/PaymentsTable';
+import Pagination from '@/components/PaginationComp';
+import PieChart from '@/components/PieChart';
 
 describe('Dashboard page', () => {
   enableAutoDestroy(beforeEach);

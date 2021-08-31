@@ -6,7 +6,7 @@
     <div class="text-center mb-10 text-h5">
       К сожалению ничего не найдено, вернуться на главную?
     </div>
-    <v-btn to="/" color="teal" dark style="font-size: 18px;">
+    <v-btn to="/dashboard" color="teal" dark style="font-size: 18px;">
       На главную
     </v-btn>
   </div>

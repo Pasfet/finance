@@ -64,11 +64,15 @@ export default {
       value: 0,
       id: null,
       menu: false,
+      data: [],
     };
   },
   computed: {
     computedDateFormatted() {
       return this.formatDate(this.date);
+    },
+    getData() {
+      return this.$store.getters.getPaymentsList;
     },
   },
   methods: {
@@ -99,12 +103,20 @@ export default {
       this.id = this.payment.id;
       this.dateFormatted = this.payment.date;
     },
+    setDataFromUrl() {
+      this.data = this.getData;
+      this.id = this.data[this.$route.params.id - 1];
+      this.category = this.data[this.$route.params.id - 1].category;
+      this.value = this.data[this.$route.params.id - 1].value;
+      this.dateFormatted = this.data[this.$route.params.id - 1].date;
+    },
   },
   mounted() {
     this.updateData();
     if (this.$route.params?.id) {
-      this.id = this.$route.params.id;
-      this.category = this.$route.params.category;
+      this.setDataFromUrl();
+      // this.id = this.$route.params.id;
+      // this.category = this.$route.params.category;
     }
   },
 
