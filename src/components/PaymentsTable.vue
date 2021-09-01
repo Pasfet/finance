@@ -94,7 +94,6 @@ export default {
     },
     deletePayment(cost) {
       this.$store.dispatch('deletePayment', cost.id);
-      this.$store.dispatch('searchList', cost.category);
       this.$emit('deletedPayment');
     },
     onClose() {

@@ -84,6 +84,7 @@ export default {
         value: this.value,
       };
       this.$emit('editPayment', cost);
+      this.$store.dispatch('searchList', null);
       this.category = '';
       this.value = 0;
     },
@@ -115,8 +116,6 @@ export default {
     this.updateData();
     if (this.$route.params?.id) {
       this.setDataFromUrl();
-      // this.id = this.$route.params.id;
-      // this.category = this.$route.params.category;
     }
   },
 

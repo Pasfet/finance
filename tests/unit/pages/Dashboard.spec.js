@@ -37,16 +37,6 @@ describe('Dashboard page', () => {
 
     vuetify = new Vuetify();
 
-    getters = {
-      getInfo: () => {
-        return {
-          name: 'name',
-        };
-      },
-      getPaymentsList: () => [],
-      getPieData: () => [],
-      getFilteredList: () => [],
-    };
     actions = {
       fetchData: jest.fn(),
       fetchInfo: jest.fn(),
@@ -58,9 +48,6 @@ describe('Dashboard page', () => {
       actions,
     });
   });
-
-  const findButtonByText = text =>
-    wrapper.findAll('.v-btn').wrappers.find(w => w.text() === text);
 
   const createComponent = settings => {
     wrapper = mount(Dashboard, {

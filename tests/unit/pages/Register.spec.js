@@ -141,19 +141,6 @@ describe('Add payment component', () => {
     expect(wrapper.vm.$router.push).toHaveBeenCalledWith('/dashboard');
   });
 
-  it('click on clear btn', async () => {
-    const spy = jest.spyOn(Register.methods, 'clear');
-    createComponent();
-    await wrapper.find('[data-testid=inputName]').setValue('name');
-    await wrapper.find('[data-testid=inputEmail]').setValue('email@email.ru');
-    await wrapper.find('[data-testid=inputPassword]').setValue('123456');
-    await wrapper.find('[data-testid=inputConfirmPassword]').setValue('123456');
-
-    await findButtonByText('clear').trigger('click');
-
-    expect(spy).toHaveBeenCalled();
-  });
-
   it('click on Login btn and redirect to login page', async () => {
     createComponent();
 

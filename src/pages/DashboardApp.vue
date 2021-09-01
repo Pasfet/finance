@@ -58,6 +58,7 @@ export default {
       height: 200,
       addFromUrl: false,
       empty: true,
+      spinner: true,
     };
   },
   computed: {
@@ -101,6 +102,7 @@ export default {
     },
   },
   mounted() {
+    this.isEmpty();
     if (this.$route.params?.category && this.$route.path.includes('add')) {
       this.addFromUrl = true;
     } else {

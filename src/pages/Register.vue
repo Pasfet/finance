@@ -42,14 +42,11 @@
 
       <v-card-actions class="d-flex justify-space-between">
         <v-card-actions>
-          <v-btn class="mr-4" @click="submitRegistration" color="teal" dark>
-            Sign up
-          </v-btn>
-          <v-btn @click="clear" color="red" dark>
-            clear
-          </v-btn>
+          <v-btn @click="toLogIn" color="primary" dark>Log in</v-btn>
         </v-card-actions>
-        <v-btn @click="toLogIn" color="primary" dark>Log in</v-btn>
+        <v-btn class="mr-4" @click="submitRegistration" color="teal" dark>
+          Sign up
+        </v-btn>
       </v-card-actions>
     </form>
     <div v-if="error">{{ error }}</div>
@@ -133,16 +130,9 @@ export default {
           await this.$store.dispatch('signUp', this.user);
           this.$router.push('/dashboard');
         } catch (e) {
-          this.error = e.message;
+          this.error = e.code;
         }
       }
-    },
-    clear() {
-      this.$v.$reset();
-      this.user.name = '';
-      this.user.email = '';
-      this.user.password = '';
-      this.user.confirmPassword = '';
     },
     toLogIn() {
       this.$router.push('/login');

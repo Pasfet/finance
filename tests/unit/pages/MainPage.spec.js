@@ -81,6 +81,7 @@ describe('main page when state does not empty', () => {
 
   it('render dashboard component', async () => {
     createComponent();
+    await wrapper.setData({ spinner: false });
 
     expect(wrapper.findComponent(Dashboard).exists()).toBe(true);
   });
@@ -121,7 +122,7 @@ describe('main page when state does not empty', () => {
 
     await findButtonByText('About').trigger('click');
 
-    expect(wrapper.vm.$router.push).toHaveBeenCalledTimes(2);
+    expect(wrapper.vm.$router.push).toHaveBeenCalledTimes(1);
     expect(wrapper.vm.$router.push).toHaveBeenCalledWith('/about');
   });
 });
@@ -159,8 +160,6 @@ describe('main page when state is empty', () => {
     getters = {
       getInfo: () => state.info,
       getPaymentsList: () => state.paymentsList,
-      getPieData: () => [],
-      getFilteredList: () => [],
     };
     actions = {
       fetchData: jest.fn(),

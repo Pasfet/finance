@@ -1,29 +1,8 @@
 import firebase from 'firebase/app';
 export default {
-  state: {
-    error: null,
-  },
-
-  getters: {
-    getError: state => state.error,
-  },
-
-  mutations: {
-    setError(state, error) {
-      state.error = error;
-    },
-    clearError(state) {
-      state.error = null;
-    },
-  },
-
   actions: {
-    async logIn({ commit }, { email, password }) {
-      try {
-        await firebase.auth().signInWithEmailAndPassword(email, password);
-      } catch (e) {
-        commit('setError', e);
-      }
+    async logIn({ email, password }) {
+      await firebase.auth().signInWithEmailAndPassword(email, password);
     },
     async logOut({ commit }) {
       await firebase.auth().signOut();
@@ -31,19 +10,15 @@ export default {
       await commit('clearPaymentsList');
       await commit('clearFilteredList');
     },
-    async signUp({ dispatch, commit }, { email, password, name }) {
-      try {
-        await firebase.auth().createUserWithEmailAndPassword(email, password);
-        const uid = await dispatch('getUid');
-        await firebase
-          .database()
-          .ref(`/users/${uid}/info`)
-          .set({
-            name,
-          });
-      } catch (e) {
-        commit('setError', e);
-      }
+    async signUp({ dispatch }, { email, password, name }) {
+      await firebase.auth().createUserWithEmailAndPassword(email, password);
+      const uid = await dispatch('getUid');
+      await firebase
+        .database()
+        .ref(`/users/${uid}/info`)
+        .set({
+          name,
+        });
     },
     getUid() {
       const user = firebase.auth().currentUser;

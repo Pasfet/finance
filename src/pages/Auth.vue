@@ -37,6 +37,7 @@ import { validationMixin } from 'vuelidate';
 import { required, email, minLength } from 'vuelidate/lib/validators';
 export default {
   name: 'Auth',
+
   mixins: [validationMixin],
 
   validations: {
@@ -82,12 +83,22 @@ export default {
           await this.$store.dispatch('logIn', this.form);
           this.$router.push('/dashboard');
         } catch (e) {
-          this.error = e.message;
+          if (e.code.match(/auth/, 'i')) {
+            this.error = 'wrong login or password';
+          }
         }
       }
     },
     toSignUp() {
       this.$router.push('/register');
+    },
+  },
+  watch: {
+    form: {
+      deep: true,
+      handler() {
+        this.error = null;
+      },
     },
   },
 };

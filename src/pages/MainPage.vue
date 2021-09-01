@@ -29,19 +29,28 @@
         </v-list>
       </v-menu>
     </v-app-bar>
-    <dashboard-app :getData="getData" :getPieData="getPieData" />
+
+    <spinner v-if="spinner" size="64" line-fg-color="#009688"></spinner>
+    <dashboard-app v-else :getData="getData" :getPieData="getPieData" />
   </div>
 </template>
 
 <script>
+import Spinner from 'vue-simple-spinner';
+
 import headerSearch from '../components/headerSearch.vue';
 import DashboardApp from './DashboardApp.vue';
-
 export default {
   name: 'PageMain',
   components: {
     headerSearch,
     DashboardApp,
+    Spinner,
+  },
+  data() {
+    return {
+      spinner: true,
+    };
   },
   computed: {
     getInfo() {
@@ -73,6 +82,7 @@ export default {
     if (!Object.keys(this.getPaymentsList).length) {
       await this.$store.dispatch('fetchData');
     }
+    this.spinner = false;
   },
 };
 </script>
