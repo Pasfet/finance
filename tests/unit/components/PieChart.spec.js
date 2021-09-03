@@ -1,6 +1,6 @@
-import { mount, createLocalVue, enableAutoDestroy } from '@vue/test-utils';
+import { mount, enableAutoDestroy } from '@vue/test-utils';
 
-import PieChart from '../../src/components/PieChart';
+import PieChart from '@/components/PieChart';
 
 describe('Pie chart', () => {
   enableAutoDestroy(beforeEach);

@@ -6,7 +6,7 @@ import {
   enableAutoDestroy,
 } from '@vue/test-utils';
 
-import PaymentContextMenu from '../../src/components/PaymentContextMenu';
+import PaymentContextMenu from '@/components/PaymentContextMenu';
 
 describe('payment context menu', () => {
   enableAutoDestroy(beforeEach);

@@ -60,12 +60,7 @@
 export default {
   name: 'AddPaymentForm',
   props: {
-    lastId: {
-      type: Number,
-      required: true,
-    },
     categories: {
-      type: Array,
       required: true,
     },
   },
@@ -93,7 +88,7 @@ export default {
   methods: {
     addCost() {
       const cost = {
-        id: this.lastId + 1,
+        id: Date.now(),
         date: this.dateFormatted,
         category: this.category.toLowerCase(),
         value: this.value,

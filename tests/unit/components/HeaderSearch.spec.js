@@ -2,9 +2,8 @@ import Vuetify from 'vuetify';
 import Vue from 'vue';
 import Vuex from 'vuex';
 import { mount, createLocalVue, enableAutoDestroy } from '@vue/test-utils';
-import { nextTick } from 'vue';
 
-import Search from '../../src/components/headerSearch';
+import Search from '@/components/headerSearch';
 
 describe('Add payment component', () => {
   enableAutoDestroy(beforeEach);
@@ -56,5 +55,12 @@ describe('Add payment component', () => {
     wrapper.find('[data-testid=search]').setValue('test');
 
     expect(wrapper.find('[data-testid=search]').element.value).toBe('test');
+  });
+
+  it('call action searchList when changed data', async () => {
+    createComponent();
+    await wrapper.setData({ search: 'test' });
+
+    expect(actions.searchList).toHaveBeenCalled();
   });
 });

@@ -4,7 +4,7 @@ import Vuex from 'vuex';
 import VueRouter from 'vue-router';
 import { mount, createLocalVue, enableAutoDestroy } from '@vue/test-utils';
 
-import EditPaymentForm from '../../src/components/EditPaymentFormDialog';
+import EditPaymentForm from '@/components/EditPaymentFormDialog';
 
 describe('payment context menu', () => {
   enableAutoDestroy(beforeEach);
@@ -132,7 +132,6 @@ describe('payment context menu', () => {
   });
 
   it('click edit btn', async () => {
-    const spy = jest.spyOn(EditPaymentForm.methods, 'closeModal');
     createComponent({
       propsData: {
         payment: {
@@ -147,7 +146,5 @@ describe('payment context menu', () => {
     await findButtonByText('Edit').trigger('click');
 
     expect(wrapper.emitted().editPayment).toEqual([[expect.any(Object)]]);
-    expect(spy).toHaveBeenCalled();
-    expect(actions.searchList).toHaveBeenCalled();
   });
 });

@@ -3,7 +3,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { mount, createLocalVue, enableAutoDestroy } from '@vue/test-utils';
 
-import Pagination from '../../src/components/PaginationComp';
+import Pagination from '@/components/PaginationComp';
 
 describe('pagination component', () => {
   enableAutoDestroy(beforeEach);
