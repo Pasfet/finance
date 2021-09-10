@@ -83,9 +83,7 @@ export default {
           await this.$store.dispatch('logIn', this.form);
           this.$router.push('/dashboard');
         } catch (e) {
-          if (e.code.match(/auth/, 'i')) {
-            this.error = 'wrong login or password';
-          }
+          this.error = e.message;
         }
       }
     },

@@ -91,14 +91,14 @@ describe('main page when state does not empty', () => {
 
     await findButtonByText('name').trigger('click');
 
-    expect(wrapper.text()).toContain('Exist');
+    expect(wrapper.text()).toContain('Exit');
   });
 
   it('click on btn Exist toHaveBeenCalled action logOut', async () => {
     createComponent();
     await findButtonByText('name').trigger('click');
 
-    await findButtonByText('Exist').trigger('click');
+    await findButtonByText('Exit').trigger('click');
 
     expect(actions.logOut).toHaveBeenCalled();
   });
@@ -107,7 +107,7 @@ describe('main page when state does not empty', () => {
     createComponent();
     await findButtonByText('name').trigger('click');
 
-    await findButtonByText('Exist').trigger('click');
+    await findButtonByText('Exit').trigger('click');
 
     expect(wrapper.vm.$router.push).toHaveBeenCalledTimes(2);
     expect(wrapper.vm.$router.push).toHaveBeenCalledWith('/login');
