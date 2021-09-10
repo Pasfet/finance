@@ -1,14 +1,26 @@
 import firebase from 'firebase/app';
 export default {
+  state: {
+    error: null,
+  },
+  mutations: {
+    setError(state, err) {
+      state.error = err;
+    },
+  },
   actions: {
-    async logIn({ email, password }) {
-      await firebase.auth().signInWithEmailAndPassword(email, password);
+    async logIn({ commit }, { email, password }) {
+      try {
+        await firebase.auth().signInWithEmailAndPassword(email, password);
+      } catch (e) {
+        commit('setError', e);
+      }
     },
     async logOut({ commit }) {
       await firebase.auth().signOut();
-      await commit('clearInfo');
-      await commit('clearPaymentsList');
-      await commit('clearFilteredList');
+      commit('clearInfo');
+      commit('clearPaymentsList');
+      commit('clearFilteredList');
     },
     async signUp({ dispatch }, { email, password, name }) {
       await firebase.auth().createUserWithEmailAndPassword(email, password);

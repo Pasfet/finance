@@ -57,8 +57,7 @@ export default {
       perPage: 5,
       height: 200,
       addFromUrl: false,
-      empty: true,
-      spinner: true,
+      empty: true
     };
   },
   computed: {

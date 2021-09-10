@@ -22,7 +22,7 @@
           <v-list-item>
             <v-list-item-title>
               <v-btn @click="signOut" color="red" dark data-testid="btnSignOut"
-                >Exist</v-btn
+                >Exit</v-btn
               >
             </v-list-item-title>
           </v-list-item>
@@ -30,7 +30,7 @@
       </v-menu>
     </v-app-bar>
 
-    <spinner v-if="spinner" size="64" line-fg-color="#009688"></spinner>
+    <spinner v-if="spinner" size="64" line-fg-color="#009688" class="spinner"></spinner>
     <dashboard-app v-else :getData="getData" :getPieData="getPieData" />
   </div>
 </template>
@@ -86,3 +86,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.spinner {
+  position: fixed;
+  top: 50%;
+  right: 50%;
+}
+</style>
